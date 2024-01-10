@@ -77,6 +77,7 @@ namespace details
 
         amrex::Vector<int> n_cell(AMREX_SPACEDIM);
         bool const has_ncell = pp_amr.queryarr("n_cell", n_cell);
+        amrex::Print() << "has_ncell=" << has_ncell << "\n";
         if (has_ncell)
             return amrex_amrcore_gridding();
         else
@@ -88,8 +89,9 @@ namespace details
     {
         amrex::ParmParse const pp_amr("amr");
 
-        // Domain index space - we use temporary values here, then fix later
-        amrex::Vector<int> const n_cell = {AMREX_D_DECL(256,256,256)};
+        // Domain index space
+        amrex::Vector<int> n_cell;
+        pp_amr.getarr("n_cell", n_cell);
         amrex::Box const domain(amrex::IntVect(0), amrex::IntVect(n_cell));
 
         // Domain physical size
@@ -111,14 +113,26 @@ namespace details
     AmrCoreData
     one_box_per_rank ()
     {
-        // Domain index space
         amrex::AmrInfo amr_info;
+
+        // set max_grid_size to blocking_factor to fix the number of boxes we generate
+        amrex::ParmParse pp_amr("amr");
+        bool const has_max_grid_size =
+            pp_amr.countRecords("max_grid_size") > 0 ||
+            pp_amr.countRecords("max_grid_size_x") > 0 ||
+            pp_amr.countRecords("max_grid_size_y") > 0 ||
+            pp_amr.countRecords("max_grid_size_z") > 0;
+        if (!has_max_grid_size) {
+            amrex::Vector<int> const bf_lvl0(amr_info.blocking_factor[0].begin(), amr_info.blocking_factor[0].end());
+            pp_amr.addarr("max_grid_size", bf_lvl0);
+        }
+
+        // Domain index space
         const int nprocs = amrex::ParallelDescriptor::NProcs();
         const amrex::IntVect high_end = amr_info.blocking_factor[0]
                                         * amrex::IntVect(AMREX_D_DECL(nprocs,1,1)) - amrex::IntVect(1);
         amrex::Box const domain(amrex::IntVect(0), high_end);
         //   adding amr.n_cell for consistency
-        amrex::ParmParse pp_amr("amr");
         auto const n_cell_iv = domain.size();
         amrex::Vector<int> const n_cell_v(n_cell_iv.begin(), n_cell_iv.end());
         pp_amr.addarr("n_cell", n_cell_v);

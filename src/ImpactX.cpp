@@ -55,13 +55,14 @@ namespace impactx
     {
         BL_PROFILE("ImpactX::initGrids");
 
+        // In init_amr_core, when
         // n_cells has been set using temporary values earlier. We now know the true value of
         // n_cells, so we recompute the Geometry objects for each level here *if* the user
         // has set n_cells in the inputs file
         {
             amrex::Vector<int> n_cell(AMREX_SPACEDIM);
             amrex::ParmParse const pp_amr("amr");
-            pp_amr.queryarr("n_cell", n_cell);
+            pp_amr.getarr("n_cell", n_cell);
 
             amrex::IntVect const lo(amrex::IntVect::TheZeroVector());
             amrex::IntVect hi(n_cell);
@@ -176,13 +177,18 @@ namespace impactx
                 for (int slice_step = 0; slice_step < nslice; ++slice_step) {
                     BL_PROFILE("ImpactX::evolve::slice_step");
                     global_step++;
+                    auto const global_np = m_particle_container->TotalNumberOfParticles(false, false);
+                    auto const local_np = m_particle_container->TotalNumberOfParticles(false, true);
+
                     amrex::Print() << " ++++ Starting global_step=" << global_step
                                    << " slice_step=" << slice_step << "\n";
 
-                    // Space-charge calculation: turn off if there is only 1 particle
-                    if (space_charge &&
-                        m_particle_container->TotalNumberOfParticles(false, false) > 1) {
+                    amrex::AllPrint() << "Local np=" << local_np << " out of global np=" << global_np
+                                      << " at Proc=" << amrex::ParallelDescriptor::MyProc() << "\n";
 
+                    // Space-charge calculation: turn off if there is only 1 particle
+                    if (space_charge && global_np > 1)
+                    {
                         // transform from x',y',t to x,y,z
                         transformation::CoordinateTransformation(
                                 *m_particle_container,
@@ -220,6 +226,19 @@ namespace impactx
                         transformation::CoordinateTransformation(*m_particle_container,
                                                                  CoordSystem::s);
                     }
+                    // balance particle beam in sims w/o space charge
+                    /*else if (global_np > 1)
+                    {
+                        // Resize the mesh, based on `m_particle_container` extent
+                        amrex::ParmParse pp_geometry("geometry");
+                        amrex::Vector<amrex::Real> prob_relative(max_level + 1, 1.0);
+                        pp_geometry.addarr("prob_relative", prob_relative);
+
+                        ResizeMesh();
+
+                        // Redistribute particles in the new mesh in x, y, t
+                        m_particle_container->Redistribute();
+                    }*/
 
                     // for later: original Impact implementation as an option
                     // Redistribute particles in x',y',t

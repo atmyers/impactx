@@ -109,8 +109,8 @@ namespace impactx
         // Resize the mesh to fit the spatial extent of the beam and then
         // redistribute particles, so they reside on the MPI rank that is
         // responsible for the respective spatial particle position.
-        this->ResizeMesh();
-        m_particle_container->Redistribute();
+        //this->ResizeMesh();
+        //m_particle_container->Redistribute();
     }
 
     void ImpactX::initBeamDistributionFromInputs ()
