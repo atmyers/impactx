@@ -318,7 +318,17 @@ namespace detail
 
         // pinned memory copy
         PinnedContainer pinned_pc = pc.make_alike<amrex::PinnedArenaAllocator>();
+
+        // FIXME: Looks like this only copies particles on rank 0...
+        auto const global_np_before = pc.TotalNumberOfParticles(true, false);
+        auto const local_np_before = pc.TotalNumberOfParticles(true, true);
         pinned_pc.copyParticles(pc, true);  // no filtering
+        auto const global_np_after = pinned_pc.TotalNumberOfParticles(true, false);
+        auto const local_np_after = pinned_pc.TotalNumberOfParticles(true, true);
+        AMREX_ALWAYS_ASSERT_WITH_MESSAGE(global_np_before == global_np_after,
+                                         "pinned PC has less particles!");
+        AMREX_ALWAYS_ASSERT_WITH_MESSAGE(local_np_before == local_np_after,
+                                         "pinned PC has less particles!");
 
         // TODO: filtering
         /*
