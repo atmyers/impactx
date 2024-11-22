@@ -28,14 +28,16 @@ class generalFunctions:
         Opens a tab to the specified section link in the documentation.
         :param section_name (str): The name of the documentation section to open.
         """
+        url_dict = {
+            "LatticeElements": "https://impactx.readthedocs.io/en/latest/usage/python.html#lattice-elements",
+            "BeamDistributions": "https://impactx.readthedocs.io/en/latest/usage/python.html#initial-beam-distributions",
+            "pythonParameters": "https://impactx.readthedocs.io/en/latest/usage/python.html#general",
+            "space_charge_documentation": "https://impactx.readthedocs.io/en/latest/usage/parameters.html#space-charge",
+            "CSR": "https://impactx.readthedocs.io/en/latest/usage/parameters.html#coherent-synchrotron-radiation-csr",
+        }
 
-        if section_name == "LatticeElements":
-            url = "https://impactx.readthedocs.io/en/latest/usage/python.html#lattice-elements"
-        elif section_name == "BeamDistributions":
-            url = "https://impactx.readthedocs.io/en/latest/usage/python.html#initial-beam-distributions"
-        elif section_name == "pythonParameters":
-            url = "https://impactx.readthedocs.io/en/latest/usage/python.html#general"
-        else:
+        url = url_dict.get(section_name)
+        if url is None:
             raise ValueError(f"Invalid section name: {section_name}")
 
         if "WSL_DISTRO_NAME" in os.environ:
@@ -104,11 +106,11 @@ class generalFunctions:
         if errors == [] and additional_conditions:
             for condition in additional_conditions:
                 if condition == "non_zero" and value == 0:
-                    errors.append("Must be non-zero")
-                if condition == "positive" and value <= 0:
-                    errors.append("Must be positive")
-                if condition == "negative" and value >= 0:
-                    errors.append("Must be negative")
+                    errors.append("Must be non-zero.")
+                if condition == "positive" and value < 0:
+                    errors.append("Must be positive.")
+                if condition == "negative" and value > 0:
+                    errors.append("Must be negative.")
 
         return errors
 
@@ -150,6 +152,35 @@ class generalFunctions:
 
         if state.selectedLatticeList == []:
             error_details.append("LatticeListIsEmpty")
+
+        # Check for errors in CSR parameters
+        if state.csr_bins_error_message:
+            error_details.append(f"CSR Bins: {state.csr_bins_error_message}")
+
+        # Check for errors in Space Charge parameters
+        if state.space_charge:
+            # n_cell parameters
+            for direction in ["x", "y", "z"]:
+                n_cell_error = getattr(state, f"error_message_n_cell_{direction}")
+                if n_cell_error:
+                    error_details.append(f"n_cell_{direction}: {n_cell_error}")
+
+            # Blocking factor parameters
+            for direction in ["x", "y", "z"]:
+                blocking_factor_error = getattr(
+                    state, f"error_message_blocking_factor_{direction}"
+                )
+                if blocking_factor_error:
+                    error_details.append(
+                        f"blocking_factor_{direction}: {blocking_factor_error}"
+                    )
+
+            # Prob Relative Fields
+            for index, field in enumerate(state.prob_relative_fields):
+                if field["error_message"]:
+                    error_details.append(
+                        f"prob_relative[{index}]: {field['error_message']}"
+                    )
 
         state.disableRunSimulationButton = bool(error_details)
 
