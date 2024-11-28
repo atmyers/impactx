@@ -144,7 +144,7 @@ namespace RFCavityData
           : Named(name),
             Thick(ds, nslice),
             Alignment(dx, dy, rotation_degree),
-            m_escale(escale), m_freq(freq), m_phase(phase), m_mapsteps(mapsteps)
+            m_escale(escale), m_freq(freq), m_phase(phase), m_mapsteps(mapsteps), m_id(RFCavityData::next_id)
         {
             // next created RF cavity has another id for its data
             RFCavityData::next_id++;
