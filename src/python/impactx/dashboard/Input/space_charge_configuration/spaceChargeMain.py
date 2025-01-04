@@ -10,26 +10,37 @@ server, state, ctrl = setup_server()
 # Default
 # -----------------------------------------------------------------------------
 
-state.dynamic_size = False
-state.max_level = 0
-state.n_cell = []
+state.dynamic_size = generalFunctions.get_default("dynamic_size", "default_values")
+state.max_level = generalFunctions.get_default("max_level", "default_values")
+state.particle_shape = generalFunctions.get_default("particle_shape", "default_values")
+state.poisson_solver = generalFunctions.get_default("poisson_solver", "default_values")
+
 state.prob_relative = []
-state.particle_shape = 2
-state.poisson_solver = "fft"
-
 state.prob_relative_fields = []
-state.n_cell_x = 32
-state.n_cell_y = 32
-state.n_cell_z = 32
 
-state.blocking_factor_x = 16
-state.blocking_factor_y = 16
-state.blocking_factor_z = 16
+state.n_cell = []
+state.n_cell_x = generalFunctions.get_default("n_cell", "default_values")
+state.n_cell_y = generalFunctions.get_default("n_cell", "default_values")
+state.n_cell_z = generalFunctions.get_default("n_cell", "default_values")
 
-state.mlmg_relative_tolerance = 1.0e-7
-state.mlmg_absolute_tolerance = 0.0
-state.mlmg_max_iters = 100
-state.mlmg_verbosity = 1
+state.blocking_factor_x = generalFunctions.get_default(
+    "blocking_factor", "default_values"
+)
+state.blocking_factor_y = generalFunctions.get_default(
+    "blocking_factor", "default_values"
+)
+state.blocking_factor_z = generalFunctions.get_default(
+    "blocking_factor", "default_values"
+)
+
+state.mlmg_relative_tolerance = generalFunctions.get_default(
+    "mlmg_relative_tolerance", "default_values"
+)
+state.mlmg_absolute_tolerance = generalFunctions.get_default(
+    "mlmg_absolute_tolerance", "default_values"
+)
+state.mlmg_max_iters = generalFunctions.get_default("mlmg_max_iters", "default_values")
+state.mlmg_verbosity = generalFunctions.get_default("mlmg_verbosity", "default_values")
 
 state.error_message_mlmg_relative_tolerance = ""
 state.error_message_mlmg_absolute_tolerance = ""
@@ -43,11 +54,21 @@ state.error_message_mlmg_verbosity = ""
 
 def populate_prob_relative_fields(max_level):
     num_prob_relative_fields = int(max_level) + 1
+    fft_first_field_value = generalFunctions.get_default(
+        "prob_relative_first_value_fft", "default_values"
+    )
+    multigrid_first_field_value = generalFunctions.get_default(
+        "prob_relative_first_value_multigrid", "default_values"
+    )
 
     if state.poisson_solver == "fft":
-        state.prob_relative = [1.1] + [0.0] * (num_prob_relative_fields - 1)
+        state.prob_relative = [fft_first_field_value] + [0.0] * (
+            num_prob_relative_fields - 1
+        )
     elif state.poisson_solver == "multigrid":
-        state.prob_relative = [3.1] + [0.0] * (num_prob_relative_fields - 1)
+        state.prob_relative = [multigrid_first_field_value] + [0.0] * (
+            num_prob_relative_fields - 1
+        )
     else:
         state.prob_relative = [0.0] * num_prob_relative_fields
 
@@ -57,6 +78,7 @@ def populate_prob_relative_fields(max_level):
             "error_message": SpaceChargeFunctions.validate_prob_relative_fields(
                 i, state.prob_relative[i]
             ),
+            "step": generalFunctions.get_default("prob_relative", "steps"),
         }
         for i in range(num_prob_relative_fields)
     ]
@@ -197,7 +219,11 @@ class SpaceChargeConfiguration:
                         vuetify.VSelect(
                             label="Poisson Solver",
                             v_model=("poisson_solver",),
-                            items=(["multigrid", "fft"],),
+                            items=(
+                                generalFunctions.get_default(
+                                    "poisson_solver_list", "default_values"
+                                ),
+                            ),
                             dense=True,
                             hide_details=True,
                         )
@@ -205,14 +231,22 @@ class SpaceChargeConfiguration:
                         vuetify.VSelect(
                             label="Particle Shape",
                             v_model=("particle_shape",),
-                            items=([1, 2, 3],),
+                            items=(
+                                generalFunctions.get_default(
+                                    "particle_shape_list", "default_values"
+                                ),
+                            ),
                             dense=True,
                         )
                     with vuetify.VCol(cols=3, classes="py-0"):
                         vuetify.VSelect(
                             label="Max Level",
                             v_model=("max_level",),
-                            items=([0, 1, 2, 3, 4],),
+                            items=(
+                                generalFunctions.get_default(
+                                    "max_level_list", "default_values"
+                                ),
+                            ),
                             dense=True,
                         )
                 with vuetify.VCol(classes="pa-0"):
@@ -228,6 +262,8 @@ class SpaceChargeConfiguration:
                                 v_model=(f"n_cell_{direction}",),
                                 error_messages=(f"error_message_n_cell_{direction}",),
                                 type="number",
+                                step=generalFunctions.get_default("n_cell", "steps"),
+                                __properties=["step"],
                                 dense=True,
                                 style="margin-top: -5px",
                             )
@@ -246,6 +282,10 @@ class SpaceChargeConfiguration:
                                     f"error_message_blocking_factor_{direction}",
                                 ),
                                 type="number",
+                                step=generalFunctions.get_default(
+                                    "blocking_factor", "steps"
+                                ),
+                                __properties=["step"],
                                 dense=True,
                                 style="margin-top: -5px",
                             )
@@ -265,6 +305,8 @@ class SpaceChargeConfiguration:
                             input=(ctrl.update_prob_relative, "[index, $event]"),
                             error_messages=("field.error_message",),
                             type="number",
+                            step=("field.step",),
+                            __properties=["step"],
                             dense=True,
                             style="margin-top: -5px",
                         )
@@ -295,6 +337,10 @@ class SpaceChargeConfiguration:
                                         "error_message_mlmg_relative_tolerance",
                                     ),
                                     type="number",
+                                    step=generalFunctions.get_default(
+                                        "mlmg_relative_tolerance", "steps"
+                                    ),
+                                    __properties=["step"],
                                     dense=True,
                                 )
                             with vuetify.VCol(cols=6, classes="py-0"):
@@ -304,7 +350,14 @@ class SpaceChargeConfiguration:
                                     error_messages=(
                                         "error_message_mlmg_absolute_tolerance",
                                     ),
+                                    suffix=generalFunctions.get_default(
+                                        "mlmg_absolute_tolerance", "units"
+                                    ),
                                     type="number",
+                                    step=generalFunctions.get_default(
+                                        "mlmg_absolute_tolerance", "steps"
+                                    ),
+                                    __properties=["step"],
                                     dense=True,
                                 )
                         with vuetify.VRow(
@@ -316,6 +369,10 @@ class SpaceChargeConfiguration:
                                     v_model=("mlmg_max_iters",),
                                     error_messages=("error_message_mlmg_max_iters",),
                                     type="number",
+                                    step=generalFunctions.get_default(
+                                        "mlmg_max_iters", "steps"
+                                    ),
+                                    __properties=["step"],
                                     dense=True,
                                 )
                             with vuetify.VCol(cols=6, classes="py-0"):
@@ -324,5 +381,9 @@ class SpaceChargeConfiguration:
                                     v_model=("mlmg_verbosity",),
                                     error_messages=("error_message_mlmg_verbosity",),
                                     type="number",
+                                    step=generalFunctions.get_default(
+                                        "mlmg_verbosity", "steps"
+                                    ),
+                                    __properties=["step"],
                                     dense=True,
                                 )

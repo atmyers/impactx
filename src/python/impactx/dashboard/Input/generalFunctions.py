@@ -13,6 +13,7 @@ import subprocess
 import webbrowser
 
 from ..trame_setup import setup_server
+from .defaults import DashboardDefaults
 
 server, state, ctrl = setup_server()
 
@@ -45,6 +46,17 @@ class generalFunctions:
         else:
             webbrowser.open_new_tab(url)
 
+    @staticmethod
+    def get_default(parameter, type):
+        parameter_type_dictionary = getattr(DashboardDefaults, f"{type.upper()}", None)
+        parameter_default = parameter_type_dictionary.get(parameter)
+
+        if parameter_default is not None:
+            return parameter_default
+
+        parameter_name_base = parameter.partition("_")[0]
+        return parameter_type_dictionary.get(parameter_name_base)
+
     # -----------------------------------------------------------------------------
     # Validation functions
     # -----------------------------------------------------------------------------
@@ -71,11 +83,14 @@ class generalFunctions:
         Validates the input value against the desired type and additional conditions.
         :param input_value: The value to validate.
         :param value_type: The desired type ('int', 'float', 'str').
-        :param conditions: A list of additional conditions to validate.
+        :param additional_conditions: A list of additional conditions to validate.
         :return: A list of error messages. An empty list if there are no errors.
         """
         errors = []
         value = None
+
+        if input_value == "None":
+            return errors
 
         # value_type checking
         if value_type == "int":

@@ -32,9 +32,9 @@ state.listOfLatticeElementParametersAndDefault = (
 # Default
 # -----------------------------------------------------------------------------
 
-state.selectedLattice = None
+state.selectedLattice = generalFunctions.get_default("lattice", "default_values")
 state.selectedLatticeList = []
-state.nsliceDefaultValue = None
+state.nsliceDefaultValue = generalFunctions.get_default("n_slice", "default_values")
 
 # -----------------------------------------------------------------------------
 # Main Functions
@@ -429,6 +429,11 @@ class LatticeConfiguration:
                                         ctrl.nsliceDefaultChange,
                                         "['nslice', $event]",
                                     ),
+                                    type="number",
+                                    step=generalFunctions.get_default(
+                                        "nslice", "steps"
+                                    ),
+                                    __properties=["step"],
                                     placeholder="Value",
                                     dense=True,
                                     outlined=True,

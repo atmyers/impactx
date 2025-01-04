@@ -65,15 +65,23 @@ class InputParameters:
     """
 
     def __init__(self):
-        state.particle_shape = 2
-        state.npart = 1000
-        state.kin_energy = 2.0e3
+        state.particle_shape = generalFunctions.get_default(
+            "particle_shape", "default_values"
+        )
+        state.npart = generalFunctions.get_default("npart", "default_values")
+        state.kin_energy = generalFunctions.get_default("kin_energy", "default_values")
         state.kin_energy_MeV = state.kin_energy
-        state.bunch_charge_C = 1.0e-9
-        state.kin_energy_unit = "MeV"
-        state.old_kin_energy_unit = "MeV"
-        state.charge_qe = -1
-        state.mass_MeV = 0.510998950
+        state.bunch_charge_C = generalFunctions.get_default(
+            "bunch_charge_C", "default_values"
+        )
+        state.kin_energy_unit = generalFunctions.get_default(
+            "kin_energy_unit", "default_values"
+        )
+        state.old_kin_energy_unit = generalFunctions.get_default(
+            "kin_energy_unit", "default_values"
+        )
+        state.charge_qe = generalFunctions.get_default("charge_qe", "default_values")
+        state.mass_MeV = generalFunctions.get_default("mass_MeV", "default_values")
 
         state.npart_validation = []
         state.kin_energy_validation = []
@@ -114,8 +122,10 @@ class InputParameters:
                         vuetify.VTextField(
                             label="Ref. Particle Charge",
                             v_model=("charge_qe",),
-                            suffix="qe",
+                            suffix=generalFunctions.get_default("charge_qe", "units"),
                             type="number",
+                            step=generalFunctions.get_default("charge_qe", "steps"),
+                            __properties=["step"],
                             dense=True,
                             error_messages=("charge_qe_validation",),
                             change=(
@@ -127,8 +137,10 @@ class InputParameters:
                         vuetify.VTextField(
                             label="Ref. Particle Mass",
                             v_model=("mass_MeV",),
-                            suffix="MeV",
+                            suffix=generalFunctions.get_default("mass_MeV", "units"),
                             type="number",
+                            step=generalFunctions.get_default("mass_MeV", "steps"),
+                            __properties=["step"],
                             dense=True,
                             error_messages=("mass_MeV_validation",),
                             change=(
@@ -147,6 +159,8 @@ class InputParameters:
                                 "[$event, 'int','npart','npart_validation']",
                             ),
                             type="number",
+                            step=generalFunctions.get_default("npart", "steps"),
+                            __properties=["step"],
                             dense=True,
                         )
                 with vuetify.VRow(classes="my-2"):
@@ -160,6 +174,8 @@ class InputParameters:
                                 "[$event, 'float','kin_energy','kin_energy_validation']",
                             ),
                             type="number",
+                            step=generalFunctions.get_default("kin_energy", "steps"),
+                            __properties=["step"],
                             dense=True,
                             classes="mr-2",
                         )
@@ -167,12 +183,16 @@ class InputParameters:
                         vuetify.VSelect(
                             v_model=("kin_energy_unit",),
                             label="Unit",
-                            items=(["meV", "eV", "keV", "MeV", "GeV", "TeV"],),
+                            items=(
+                                generalFunctions.get_default(
+                                    "kin_energy_unit_list", "default_values"
+                                ),
+                            ),
                             change=(ctrl.kin_energy_unit_change, "[$event]"),
                             dense=True,
                         )
                 with vuetify.VRow(classes="my-2"):
-                    with vuetify.VCol(cols=8, classes="py-0"):
+                    with vuetify.VCol(cols=12, classes="py-0"):
                         vuetify.VTextField(
                             label="Bunch Charge",
                             v_model=("bunch_charge_C",),
@@ -182,12 +202,12 @@ class InputParameters:
                                 "[$event, 'float','bunch_charge_C','bunch_charge_C_validation']",
                             ),
                             type="number",
+                            step=generalFunctions.get_default(
+                                "bunch_charge_C", "steps"
+                            ),
+                            __properties=["step"],
                             dense=True,
-                        )
-                    with vuetify.VCol(cols=4, classes="py-0"):
-                        vuetify.VTextField(
-                            label="Unit",
-                            value="C",
-                            dense=True,
-                            disabled=True,
+                            suffix=generalFunctions.get_default(
+                                "bunch_charge_C", "units"
+                            ),
                         )

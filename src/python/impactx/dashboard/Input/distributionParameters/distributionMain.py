@@ -34,8 +34,12 @@ state.listOfDistributionsAndParametersAndDefault = (
 # Defaults
 # -----------------------------------------------------------------------------
 
-state.selectedDistribution = "Waterbag"
-state.selectedDistributionType = "Twiss"
+state.selectedDistribution = generalFunctions.get_default(
+    "selected_distribution", "default_values"
+)
+state.selectedDistributionType = generalFunctions.get_default(
+    "selected_distribution_type", "default_values"
+)
 state.selectedDistributionParameters = []
 state.distributionTypeDisabled = False
 
@@ -63,9 +67,10 @@ def populate_distribution_parameters(selectedDistribution):
                 "parameter_error_message": generalFunctions.validate_against(
                     param.default if param.default != param.empty else None, "float"
                 ),
-                "parameter_units": "m"
+                "parameter_units": generalFunctions.get_default(param.name, "units")
                 if "beta" in param.name or "emitt" in param.name
                 else "",
+                "parameter_step": generalFunctions.get_default(param.name, "steps"),
             }
             for param in sig.parameters.values()
         ]
@@ -88,6 +93,7 @@ def populate_distribution_parameters(selectedDistribution):
                 "parameter_units": "m"
                 if "beta" in parameter[0] or "emitt" in parameter[0]
                 else "",
+                "parameter_step": generalFunctions.get_default(parameter[0], "steps"),
             }
             for parameter in selectedDistributionParameters
         ]
@@ -206,7 +212,11 @@ class DistributionParameters:
                         vuetify.VSelect(
                             v_model=("selectedDistributionType",),
                             label="Type",
-                            items=(["Twiss", "Quadratic Form"],),
+                            items=(
+                                generalFunctions.get_default(
+                                    "distribution_type_list", "default_values"
+                                ),
+                            ),
                             dense=True,
                             disabled=("distributionTypeDisabled",),
                         )
@@ -231,5 +241,7 @@ class DistributionParameters:
                                             "parameter.parameter_error_message",
                                         ),
                                         type="number",
+                                        step=("parameter.parameter_step",),
+                                        __properties=["step"],
                                         dense=True,
                                     )
