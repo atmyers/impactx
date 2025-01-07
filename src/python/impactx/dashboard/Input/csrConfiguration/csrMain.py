@@ -1,5 +1,6 @@
 from trame.widgets import vuetify
 
+from ...Input.trameFunctions import TrameFunctions
 from ...trame_setup import setup_server
 from ..generalFunctions import generalFunctions
 
@@ -39,6 +40,9 @@ class csrConfiguration:
         with vuetify.VCard(v_show="csr", style="width: 170px;"):
             with vuetify.VCardTitle("CSR"):
                 vuetify.VSpacer()
+                TrameFunctions.create_refresh_button(
+                    lambda: generalFunctions.reset_inputs("csr")
+                )
                 vuetify.VIcon(
                     "mdi-information",
                     classes="ml-2",

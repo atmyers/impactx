@@ -8,6 +8,7 @@ License: BSD-3-Clause-LBNL
 
 from trame.widgets import vuetify
 
+from ...Input.trameFunctions import TrameFunctions
 from ...trame_setup import setup_server
 from ..generalFunctions import generalFunctions
 from .inputFunctions import InputFunctions
@@ -97,6 +98,9 @@ class InputParameters:
         with vuetify.VCard(style="width: 340px; height: 350px"):
             with vuetify.VCardTitle("Input Parameters"):
                 vuetify.VSpacer()
+                TrameFunctions.create_refresh_button(
+                    lambda: generalFunctions.reset_inputs("input_parameters")
+                )
                 vuetify.VIcon(
                     "mdi-information",
                     style="color: #00313C;",

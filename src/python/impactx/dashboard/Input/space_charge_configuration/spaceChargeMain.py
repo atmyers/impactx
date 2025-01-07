@@ -1,5 +1,6 @@
 from trame.widgets import vuetify
 
+from ...Input.trameFunctions import TrameFunctions
 from ...trame_setup import setup_server
 from ..generalFunctions import generalFunctions
 from .spaceChargeFunctions import SpaceChargeFunctions
@@ -19,18 +20,18 @@ state.prob_relative = []
 state.prob_relative_fields = []
 
 state.n_cell = []
-state.n_cell_x = generalFunctions.get_default("n_cell", "default_values")
-state.n_cell_y = generalFunctions.get_default("n_cell", "default_values")
-state.n_cell_z = generalFunctions.get_default("n_cell", "default_values")
+state.n_cell_x = generalFunctions.get_default("n_cell_x", "default_values")
+state.n_cell_y = generalFunctions.get_default("n_cell_y", "default_values")
+state.n_cell_z = generalFunctions.get_default("n_cell_z", "default_values")
 
 state.blocking_factor_x = generalFunctions.get_default(
-    "blocking_factor", "default_values"
+    "blocking_factor_x", "default_values"
 )
 state.blocking_factor_y = generalFunctions.get_default(
-    "blocking_factor", "default_values"
+    "blocking_factor_y", "default_values"
 )
 state.blocking_factor_z = generalFunctions.get_default(
-    "blocking_factor", "default_values"
+    "blocking_factor_z", "default_values"
 )
 
 state.mlmg_relative_tolerance = generalFunctions.get_default(
@@ -203,6 +204,9 @@ class SpaceChargeConfiguration:
                     v_if="poisson_solver == 'multigrid'",
                     click="showSpaceChargeDialog = true",
                     style="cursor: pointer;",
+                )
+                TrameFunctions.create_refresh_button(
+                    lambda: generalFunctions.reset_inputs("space_charge")
                 )
                 vuetify.VIcon(
                     "mdi-information",

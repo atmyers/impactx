@@ -7,9 +7,12 @@ class DashboardDefaults:
     # Inputs by section
     # -------------------------------------------------------------------------
 
-    INPUT_PARAMETERS = {
+    SELECTION = {
         "space_charge": False,
         "csr": False,
+    }
+
+    INPUT_PARAMETERS = {
         "charge_qe": -1,
         "mass_MeV": 0.51099895,
         "npart": 1000,
@@ -33,8 +36,12 @@ class DashboardDefaults:
         "poisson_solver": "fft",
         "particle_shape": 2,
         "max_level": 0,
-        "n_cell": 32,
-        "blocking_factor": 16,
+        "n_cell_x": 32,
+        "n_cell_y": 32,
+        "n_cell_z": 32,
+        "blocking_factor_x": 16,
+        "blocking_factor_y": 16,
+        "blocking_factor_z": 16,
         "prob_relative_first_value_fft": 1.1,
         "prob_relative_first_value_multigrid": 3.1,
         "mlmg_relative_tolerance": 1.0e-7,
@@ -61,6 +68,7 @@ class DashboardDefaults:
     # -------------------------------------------------------------------------
 
     DEFAULT_VALUES = {
+        **SELECTION,
         **INPUT_PARAMETERS,
         **DISTRIBUTION,
         **LATTICE,
