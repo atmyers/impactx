@@ -17,25 +17,32 @@ state.n_cell = []
 # -----------------------------------------------------------------------------
 
 
-def populate_prob_relative_fields(max_level):
-    num_prob_relative_fields = int(max_level) + 1
+def populate_prob_relative_fields():
+    tot_num_prob_relative_fields = int(state.max_level) + 1
     fft_first_field_value = generalFunctions.get_default(
         "prob_relative_first_value_fft", "default_values"
     )
     multigrid_first_field_value = generalFunctions.get_default(
         "prob_relative_first_value_multigrid", "default_values"
     )
-
+    first_field_value = 0
     if state.poisson_solver == "fft":
-        state.prob_relative = [fft_first_field_value] + [0.0] * (
-            num_prob_relative_fields - 1
-        )
+        first_field_value = fft_first_field_value
     elif state.poisson_solver == "multigrid":
-        state.prob_relative = [multigrid_first_field_value] + [0.0] * (
-            num_prob_relative_fields - 1
-        )
+        first_field_value = multigrid_first_field_value
+
+    if state.prob_relative:
+        size = len(state.prob_relative)
+        num_of_extra_fields = tot_num_prob_relative_fields - size
+
+        if size < tot_num_prob_relative_fields:
+            state.prob_relative.extend([0.0] * (num_of_extra_fields))
+        elif size > tot_num_prob_relative_fields:
+            state.prob_relative = state.prob_relative[:tot_num_prob_relative_fields]
     else:
-        state.prob_relative = [0.0] * num_prob_relative_fields
+        state.prob_relative = [first_field_value] + [0.0] * (
+            tot_num_prob_relative_fields - 1
+        )
 
     state.prob_relative_fields = [
         {
@@ -45,7 +52,7 @@ def populate_prob_relative_fields(max_level):
             ),
             "step": generalFunctions.get_default("prob_relative", "steps"),
         }
-        for i in range(num_prob_relative_fields)
+        for i in range(tot_num_prob_relative_fields)
     ]
 
 
@@ -83,7 +90,7 @@ def update_blocking_factor_and_n_cell(category, kwargs):
 # -----------------------------------------------------------------------------
 @state.change("poisson_solver")
 def on_poisson_solver_change(poisson_solver, **kwargs):
-    populate_prob_relative_fields(state.max_level)
+    populate_prob_relative_fields()
     state.dirty("prob_relative_fields")
     generalFunctions.update_simulation_validation_status()
 
@@ -96,7 +103,7 @@ def on_space_charge_change(space_charge, **kwargs):
 
 @state.change("max_level")
 def on_max_level_change(max_level, **kwargs):
-    populate_prob_relative_fields(max_level)
+    populate_prob_relative_fields()
     generalFunctions.update_simulation_validation_status()
 
 

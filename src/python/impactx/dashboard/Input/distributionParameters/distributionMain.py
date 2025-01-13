@@ -12,7 +12,13 @@ from distribution_input_helpers import twiss
 
 from impactx import distribution
 
-from .. import TrameFunctions, generalFunctions, setup_server, vuetify
+from .. import (
+    DashboardDefaults,
+    TrameFunctions,
+    generalFunctions,
+    setup_server,
+    vuetify,
+)
 from .distributionFunctions import DistributionFunctions
 
 server, state, ctrl = setup_server()
@@ -117,13 +123,18 @@ def distribution_parameters():
 
 @state.change("distribution")
 def on_distribution_name_change(distribution, **kwargs):
-    if distribution == "Thermal":
-        state.distribution_type = "Quadratic Form"
+    if distribution == "Thermal" or distribution == "Empty":
+        state.distribution_type = ""
         state.distribution_type_disable = True
         state.dirty("distribution_type")
     else:
+        type_list_default = DashboardDefaults.LISTS["distribution_type_list"]
+        type_default = DashboardDefaults.DISTRIBUTION_PARAMETERS["distribution_type"]
+
+        if state.distribution_type not in type_list_default:
+            state.distribution_type = type_default
+
         state.distribution_type_disable = False
-    populate_distribution_parameters()
 
 
 @state.change("distribution_type")
