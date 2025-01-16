@@ -1110,6 +1110,21 @@ add_impactx_test(linac-segment.py
     OFF  # no plot script yet
 )
 
+# Drift with transverse aperture ################################################
+#
+# w/o space charge
+add_impactx_test(aperture-thick
+    examples/aperture/input_aperture_thick.in
+    ON   # ImpactX MPI-parallel
+    examples/aperture/analysis_aperture_thick.py
+    OFF  # no plot script yet
+)
+add_impactx_test(aperture-thick.py
+    examples/aperture/run_aperture_thick.py
+    OFF  # ImpactX MPI-parallel
+    examples/aperture/analysis_aperture_thick.py
+    OFF  # no plot script yet
+)
 
 # Iteration of a linear one-turn map #########################################
 #

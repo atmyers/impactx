@@ -132,6 +132,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``drift`` for a free drift. This requires these additional parameters:
@@ -140,6 +142,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``drift_chromatic`` for a free drift, with chromatic effects included.
@@ -150,6 +154,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``drift_exact`` for a free drift, using the exact nonlinear map. This requires these additional parameters:
@@ -158,6 +164,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``quad`` for a quadrupole. This requires these additional parameters:
@@ -172,6 +180,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``quad_chromatic`` for A Quadrupole magnet, with chromatic effects included.
@@ -191,6 +201,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``quadrupole_softedge`` for a soft-edge quadrupole. This requires these additional parameters:
@@ -204,6 +216,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.mapsteps`` (``integer``) number of integration steps per slice used for map and reference particle push in applied fields
                (default: ``1``)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
@@ -222,6 +236,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``sbend`` for a bending magnet. This requires these additional parameters:
@@ -231,6 +247,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``sbend_exact`` for a bending magnet using the exact nonlinear map for the bend body. The map corresponds to the map described in:
@@ -244,6 +262,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``solenoid`` for an ideal hard-edge solenoid magnet. This requires these additional parameters:
@@ -254,6 +274,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``solenoid_softedge`` for a soft-edge solenoid. This requires these additional parameters:
@@ -272,6 +294,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.mapsteps`` (``integer``) number of integration steps per slice used for map and reference particle push in applied fields (default: ``1``)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
@@ -294,6 +318,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``rfcavity`` a radiofrequency cavity.
@@ -309,6 +335,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.mapsteps`` (``integer``) number of integration steps per slice used for map and reference particle push in applied fields (default: ``1``)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
@@ -352,6 +380,8 @@ Lattice Elements
             * ``<element_name>.dx`` (``float``, in meters) horizontal translation error
             * ``<element_name>.dy`` (``float``, in meters) vertical translation error
             * ``<element_name>.rotation`` (``float``, in degrees) rotation error in the transverse plane
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical)
             * ``<element_name>.nslice`` (``integer``) number of slices used for the application of space charge (default: ``1``)
 
         * ``linear_map`` for a custom, linear transport matrix.
@@ -430,8 +460,8 @@ Lattice Elements
         * ``aperture`` for a thin collimator element applying a transverse aperture boundary.
           This requires these additional parameters:
 
-            * ``<element_name>.xmax`` (``float``, in meters) maximum value of the horizontal coordinate
-            * ``<element_name>.ymax`` (``float``, in meters) maximum value of the vertical coordinate
+            * ``<element_name>.aperture_x`` (``float``, in meters) horizontal half-aperture (elliptical or rectangular)
+            * ``<element_name>.aperture_y`` (``float``, in meters) vertical half-aperture (elliptical or rectangular)
             * ``<element_name>.repeat_x`` (``float``, in meters) horizontal period for repeated aperture masking (inactive by default)
             * ``<element_name>.repeat_y`` (``float``, in meters) vertical period for repeated aperture masking (inactive by default)
             * ``<element_name>.shape`` (``string``) shape of the aperture boundary: ``rectangular`` (default) or ``elliptical``

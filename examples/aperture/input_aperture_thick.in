@@ -21,7 +21,7 @@ beam.mutpt = 0.0
 ###############################################################################
 # Beamline: lattice elements and segments
 ###############################################################################
-lattice.elements = monitor drift collimator monitor
+lattice.elements = monitor drift monitor
 lattice.nslice = 1
 
 monitor.type = beam_monitor
@@ -29,11 +29,8 @@ monitor.backend = h5
 
 drift.type = drift
 drift.ds = 0.123
-
-collimator.type = aperture
-collimator.shape = rectangular
-collimator.aperture_x = 1.0e-3
-collimator.aperture_y = 1.5e-3
+drift.aperture_x = 1.0e-3
+drift.aperture_y = 1.5e-3
 
 
 ###############################################################################
