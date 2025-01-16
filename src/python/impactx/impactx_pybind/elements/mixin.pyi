@@ -6,15 +6,11 @@ from __future__ import annotations
 
 import amrex.space3d.amrex_3d_pybind
 
-__all__ = ["Alignment", "LinearTransport", "Named", "Thick", "Thin"]
+__all__ = ["Alignment", "LinearTransport", "Named", "PipeAperture", "Thick", "Thin"]
 
 class Alignment:
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
-    def __init__(self) -> None:
-        """
-        Mixin class for lattice elements with horizontal/vertical alignment errors.
-        """
     @property
     def dx(self) -> float:
         """
@@ -41,10 +37,6 @@ class LinearTransport:
     Map6x6 = amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
-    def __init__(self) -> None:
-        """
-        Mixin class for linear transport approximation via matrices.
-        """
 
 class Named:
     @staticmethod
@@ -59,13 +51,23 @@ class Named:
     @name.setter
     def name(self, arg1: str) -> None: ...
 
+class PipeAperture:
+    @staticmethod
+    def _pybind11_conduit_v1_(*args, **kwargs): ...
+    @property
+    def aperture_x(self) -> float:
+        """
+        horizontal aperture in m
+        """
+    @property
+    def aperture_y(self) -> float:
+        """
+        vertical aperture in m
+        """
+
 class Thick:
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
-    def __init__(self, ds: float, nslice: float = 1) -> None:
-        """
-        Mixin class for lattice elements with finite length.
-        """
     @property
     def ds(self) -> float:
         """
@@ -84,10 +86,6 @@ class Thick:
 class Thin:
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
-    def __init__(self) -> None:
-        """
-        Mixin class for lattice elements with zero length.
-        """
     @property
     def ds(self) -> float:
         """

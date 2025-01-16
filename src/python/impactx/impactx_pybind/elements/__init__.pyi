@@ -52,8 +52,8 @@ class Aperture(mixin.Named, mixin.Thin, mixin.Alignment):
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
         self,
-        xmax: float,
-        ymax: float,
+        aperture_x: float,
+        aperture_y: float,
         repeat_x: float = 0,
         repeat_y: float = 0,
         shape: str = "rectangular",
@@ -84,6 +84,20 @@ class Aperture(mixin.Named, mixin.Thin, mixin.Alignment):
     @action.setter
     def action(self, arg1: str) -> None: ...
     @property
+    def aperture_x(self) -> float:
+        """
+        maximum horizontal coordinate
+        """
+    @aperture_x.setter
+    def aperture_x(self, arg1: float) -> None: ...
+    @property
+    def aperture_y(self) -> float:
+        """
+        maximum vertical coordinate
+        """
+    @aperture_y.setter
+    def aperture_y(self, arg1: float) -> None: ...
+    @property
     def repeat_x(self) -> float:
         """
         horizontal period for repeated aperture masking
@@ -104,20 +118,6 @@ class Aperture(mixin.Named, mixin.Thin, mixin.Alignment):
         """
     @shape.setter
     def shape(self, arg1: str) -> None: ...
-    @property
-    def xmax(self) -> float:
-        """
-        maximum horizontal coordinate
-        """
-    @xmax.setter
-    def xmax(self, arg1: float) -> None: ...
-    @property
-    def ymax(self) -> float:
-        """
-        maximum vertical coordinate
-        """
-    @ymax.setter
-    def ymax(self, arg1: float) -> None: ...
 
 class BeamMonitor(mixin.Thin):
     @staticmethod
@@ -224,7 +224,7 @@ class Buncher(mixin.Named, mixin.Thin, mixin.Alignment):
     @k.setter
     def k(self, arg1: float) -> None: ...
 
-class CFbend(mixin.Named, mixin.Thick, mixin.Alignment):
+class CFbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -235,6 +235,8 @@ class CFbend(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -277,6 +279,8 @@ class ChrAcc(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -308,7 +312,7 @@ class ChrAcc(mixin.Named, mixin.Thick, mixin.Alignment):
     @ez.setter
     def ez(self, arg1: float) -> None: ...
 
-class ChrDrift(mixin.Named, mixin.Thick, mixin.Alignment):
+class ChrDrift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -317,6 +321,8 @@ class ChrDrift(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -334,7 +340,7 @@ class ChrDrift(mixin.Named, mixin.Thick, mixin.Alignment):
         Push first the reference particle, then all other particles.
         """
 
-class ChrPlasmaLens(mixin.Named, mixin.Thick, mixin.Alignment):
+class ChrPlasmaLens(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -345,6 +351,8 @@ class ChrPlasmaLens(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -376,7 +384,7 @@ class ChrPlasmaLens(mixin.Named, mixin.Thick, mixin.Alignment):
     @unit.setter
     def unit(self, arg1: int) -> None: ...
 
-class ChrQuad(mixin.Named, mixin.Thick, mixin.Alignment):
+class ChrQuad(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -387,6 +395,8 @@ class ChrQuad(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -418,7 +428,7 @@ class ChrQuad(mixin.Named, mixin.Thick, mixin.Alignment):
     @unit.setter
     def unit(self, arg1: int) -> None: ...
 
-class ConstF(mixin.Named, mixin.Thick, mixin.Alignment):
+class ConstF(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -430,6 +440,8 @@ class ConstF(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -524,7 +536,7 @@ class DipEdge(mixin.Named, mixin.Thin, mixin.Alignment):
     @rc.setter
     def rc(self, arg1: float) -> None: ...
 
-class Drift(mixin.Named, mixin.Thick, mixin.Alignment):
+class Drift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -533,6 +545,8 @@ class Drift(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -568,7 +582,7 @@ class Empty(mixin.Thin):
         Push first the reference particle, then all other particles.
         """
 
-class ExactDrift(mixin.Named, mixin.Thick, mixin.Alignment):
+class ExactDrift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -577,6 +591,8 @@ class ExactDrift(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -594,7 +610,7 @@ class ExactDrift(mixin.Named, mixin.Thick, mixin.Alignment):
         Push first the reference particle, then all other particles.
         """
 
-class ExactSbend(mixin.Named, mixin.Thick, mixin.Alignment):
+class ExactSbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -605,6 +621,8 @@ class ExactSbend(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -1094,7 +1112,7 @@ class Programmable(mixin.Named):
     @threadsafe.setter
     def threadsafe(self, arg1: bool) -> None: ...
 
-class Quad(mixin.Named, mixin.Thick, mixin.Alignment):
+class Quad(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -1104,6 +1122,8 @@ class Quad(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -1128,7 +1148,7 @@ class Quad(mixin.Named, mixin.Thick, mixin.Alignment):
     @k.setter
     def k(self, arg1: float) -> None: ...
 
-class RFCavity(mixin.Named, mixin.Thick, mixin.Alignment):
+class RFCavity(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -1142,6 +1162,8 @@ class RFCavity(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         mapsteps: int = 1,
         nslice: int = 1,
         name: str | None = None,
@@ -1188,7 +1210,7 @@ class RFCavity(mixin.Named, mixin.Thick, mixin.Alignment):
     @phase.setter
     def phase(self, arg1: float) -> None: ...
 
-class Sbend(mixin.Named, mixin.Thick, mixin.Alignment):
+class Sbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -1198,6 +1220,8 @@ class Sbend(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
@@ -1270,7 +1294,7 @@ class ShortRF(mixin.Named, mixin.Thin, mixin.Alignment):
     @phase.setter
     def phase(self, arg1: float) -> None: ...
 
-class SoftQuadrupole(mixin.Named, mixin.Thick, mixin.Alignment):
+class SoftQuadrupole(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -1282,6 +1306,8 @@ class SoftQuadrupole(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         mapsteps: int = 1,
         nslice: int = 1,
         name: str | None = None,
@@ -1314,7 +1340,7 @@ class SoftQuadrupole(mixin.Named, mixin.Thick, mixin.Alignment):
     @mapsteps.setter
     def mapsteps(self, arg1: int) -> None: ...
 
-class SoftSolenoid(mixin.Named, mixin.Thick, mixin.Alignment):
+class SoftSolenoid(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -1327,6 +1353,8 @@ class SoftSolenoid(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         mapsteps: int = 1,
         nslice: int = 1,
         name: str | None = None,
@@ -1366,7 +1394,7 @@ class SoftSolenoid(mixin.Named, mixin.Thick, mixin.Alignment):
     @unit.setter
     def unit(self, arg1: float) -> None: ...
 
-class Sol(mixin.Named, mixin.Thick, mixin.Alignment):
+class Sol(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -1376,6 +1404,8 @@ class Sol(mixin.Named, mixin.Thick, mixin.Alignment):
         dx: float = 0,
         dy: float = 0,
         rotation: float = 0,
+        aperture_x: float = 0,
+        aperture_y: float = 0,
         nslice: int = 1,
         name: str | None = None,
     ) -> None:
