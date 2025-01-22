@@ -13,8 +13,9 @@ from distribution_input_helpers import twiss
 from impactx import distribution
 
 from .. import (
+    CardComponents,
     DashboardDefaults,
-    TrameFunctions,
+    InputComponents,
     generalFunctions,
     setup_server,
     vuetify,
@@ -173,17 +174,17 @@ class DistributionParameters:
         """
 
         with vuetify.VCard(style="width: 340px; height: 300px"):
-            TrameFunctions.input_section_header("Distribution Parameters")
+            CardComponents.input_header("Distribution Parameters")
             with vuetify.VCardText():
                 with vuetify.VRow():
                     with vuetify.VCol(cols=6):
-                        TrameFunctions.select(
+                        InputComponents.select(
                             label="Select Distribution",
                             v_model_name="distribution",
                             items=(DISTRIBUTION_LIST,),
                         )
                     with vuetify.VCol(cols=6):
-                        TrameFunctions.select(
+                        InputComponents.select(
                             label="Type",
                             v_model_name="distribution_type",
                             disabled=("distribution_type_disable",),

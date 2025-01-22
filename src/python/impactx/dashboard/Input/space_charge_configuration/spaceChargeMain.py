@@ -1,4 +1,11 @@
-from .. import TrameFunctions, generalFunctions, setup_server, vuetify
+from .. import (
+    CardComponents,
+    InputComponents,
+    NavigationComponents,
+    generalFunctions,
+    setup_server,
+    vuetify,
+)
 from .spaceChargeFunctions import SpaceChargeFunctions
 
 server, state, ctrl = setup_server()
@@ -177,22 +184,22 @@ class SpaceChargeConfiguration:
             SpaceChargeConfiguration.dialog_settings()
 
         with vuetify.VCard(v_show="space_charge", style="width: 340px;"):
-            TrameFunctions.input_section_header(
+            CardComponents.input_header(
                 "Space Charge", additional_components=multigrid_settings
             )
             with vuetify.VCardText():
                 with vuetify.VRow(classes="my-0"):
                     with vuetify.VCol(cols=5, classes="py-0"):
-                        TrameFunctions.select(
+                        InputComponents.select(
                             label="Poisson Solver",
                             hide_details=True,
                         )
                     with vuetify.VCol(cols=4, classes="py-0"):
-                        TrameFunctions.select(
+                        InputComponents.select(
                             label="Particle Shape",
                         )
                     with vuetify.VCol(cols=3, classes="py-0"):
-                        TrameFunctions.select(
+                        InputComponents.select(
                             label="Max Level",
                         )
                 with vuetify.VCol(classes="pa-0"):
@@ -203,7 +210,7 @@ class SpaceChargeConfiguration:
                 with vuetify.VRow(classes="my-0"):
                     for direction in ["x", "y", "z"]:
                         with vuetify.VCol(cols=4, classes="py-0"):
-                            TrameFunctions.text_field(
+                            InputComponents.text_field(
                                 label="",
                                 v_model_name=f"n_cell_{direction}",
                                 prefix=f"{direction}:",
@@ -217,7 +224,7 @@ class SpaceChargeConfiguration:
                 with vuetify.VRow(classes="my-0"):
                     for direction in ["x", "y", "z"]:
                         with vuetify.VCol(cols=4, classes="py-0"):
-                            TrameFunctions.text_field(
+                            InputComponents.text_field(
                                 label="",
                                 prefix=f"{direction}:",
                                 v_model_name=f"blocking_factor_{direction}",
@@ -252,7 +259,7 @@ class SpaceChargeConfiguration:
         settings.
         """
         dialog_name = "space_charge_dialog_tab_settings"
-        TrameFunctions.create_dialog_tabs(
+        NavigationComponents.create_dialog_tabs(
             dialog_name, 1, ["Advanced Multigrid Settings"]
         )
         with vuetify.VTabsItems(v_model=("dialog_name", 0)):
@@ -260,19 +267,19 @@ class SpaceChargeConfiguration:
                 with vuetify.VCardText():
                     with vuetify.VRow():
                         with vuetify.VCol():
-                            TrameFunctions.text_field(
+                            InputComponents.text_field(
                                 label="MLMG Relative Tolerance",
                             )
                         with vuetify.VCol():
-                            TrameFunctions.text_field(
+                            InputComponents.text_field(
                                 label="MLMG Absolute Tolerance",
                             )
                     with vuetify.VRow():
                         with vuetify.VCol():
-                            TrameFunctions.text_field(
+                            InputComponents.text_field(
                                 label="MLMG Max Iters",
                             )
                         with vuetify.VCol():
-                            TrameFunctions.text_field(
+                            InputComponents.text_field(
                                 label="MLMG Verbosity",
                             )

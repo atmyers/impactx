@@ -8,7 +8,14 @@ License: BSD-3-Clause-LBNL
 
 from impactx import elements
 
-from .. import TrameFunctions, generalFunctions, setup_server, vuetify
+from .. import (
+    CardComponents,
+    InputComponents,
+    NavigationComponents,
+    generalFunctions,
+    setup_server,
+    vuetify,
+)
 
 server, state, ctrl = setup_server()
 
@@ -237,7 +244,7 @@ class LatticeConfiguration:
             LatticeConfiguration.dialog_settings()
 
         with vuetify.VCard(style="width: 696px;"):
-            TrameFunctions.input_section_header("Lattice Configuration")
+            CardComponents.input_header("Lattice Configuration")
             with vuetify.VCardText():
                 with vuetify.VRow(align="center", no_gutters=True):
                     with vuetify.VCol(cols=10):
@@ -306,13 +313,13 @@ class LatticeConfiguration:
         """
         dialog_name = "lattice_configuration_dialog_tab_settings"
 
-        TrameFunctions.create_dialog_tabs(dialog_name, 1, ["Defaults"])
+        NavigationComponents.create_dialog_tabs(dialog_name, 1, ["Defaults"])
         with vuetify.VTabsItems(v_model=(dialog_name, 0)):
             with vuetify.VTabItem():
                 with vuetify.VCardText():
                     with vuetify.VRow():
                         with vuetify.VCol(cols=3):
-                            TrameFunctions.text_field(
+                            InputComponents.text_field(
                                 label="nslice",
                                 v_model_name="nslice",
                                 change=(
