@@ -1110,6 +1110,22 @@ add_impactx_test(linac-segment.py
     OFF  # no plot script yet
 )
 
+# Cyclotron with dynamical losses ###############################################
+#
+# with space charge
+add_impactx_test(cyclotron-loss
+    examples/cyclotron/input_cyclotron_loss.in
+    ON   # ImpactX MPI-parallel
+    examples/cyclotron/analysis_cyclotron_loss.py
+    OFF  # no plot script yet
+)
+add_impactx_test(cyclotron-loss.py
+    examples/cyclotron/run_cyclotron_loss.py
+    OFF  # ImpactX MPI-parallel
+    examples/cyclotron/analysis_cyclotron_loss.py
+    OFF  # no plot script yet
+)
+
 # Drift with transverse aperture ################################################
 #
 # w/o space charge
