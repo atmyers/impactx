@@ -233,9 +233,11 @@ Collective Effects & Overall Simulation Parameters
 
       Run the envelope tracking simulation loop.
 
-   .. py:method:: track_reference()
+   .. py:method:: track_reference(ref)
 
       Run the reference orbit tracking simulation loop.
+
+      :param ref: the reference particle (object from :py:class:`impactx.RefPart`)
 
    .. py:method:: resize_mesh()
 
