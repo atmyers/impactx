@@ -505,12 +505,6 @@ class ImpactXParticleContainer(
         For MPI-parallel ranks, the figure is only created on the root_rank.
 
         """
-    def redistribute(
-        self, arg0: int, arg1: int, arg2: int, arg3: int, arg4: bool
-    ) -> None:
-        """
-        Redistribute particles in the current mesh in x, y, z
-        """
     def reduced_beam_characteristics(self) -> dict[str, float]:
         """
         Compute reduced beam characteristics like the position and momentum moments of the particle distribution, as well as emittance and Twiss parameters.
