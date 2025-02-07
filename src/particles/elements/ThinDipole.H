@@ -14,11 +14,15 @@
 #include "mixin/alignment.H"
 #include "mixin/beamoptic.H"
 #include "mixin/thin.H"
+#include "mixin/lineartransport.H"
 #include "mixin/named.H"
 #include "mixin/nofinalize.H"
 
 #include <AMReX_Extension.H>
 #include <AMReX_REAL.H>
+
+#include <cmath>
+#include <stdexcept>
 
 
 namespace impactx
@@ -26,6 +30,7 @@ namespace impactx
     struct ThinDipole
     : public elements::mixin::Named,
       public elements::mixin::BeamOptic<ThinDipole>,
+      public elements::mixin::LinearTransport<ThinDipole>,
       public elements::mixin::Thin,
       public elements::mixin::Alignment,
       public elements::mixin::NoFinalize
@@ -156,6 +161,22 @@ namespace impactx
             // advance position and momentum (thin dipole)
             refpart.px = px*cos_theta - pz*sin_theta;
             refpart.pz = pz*cos_theta + px*sin_theta;
+        }
+
+        /** This pushes the covariance matrix. */
+        using LinearTransport::operator();
+
+        /** This function returns the linear transport map.
+         *
+         * @param[in] refpart reference particle
+         * @returns 6x6 transport matrix
+         */
+        AMREX_GPU_HOST AMREX_FORCE_INLINE
+        Map6x6
+        transport_map ([[maybe_unused]] RefPart const & AMREX_RESTRICT refpart) const
+        {
+            throw std::runtime_error(std::string(type) + ": Envelope tracking is not yet implemented!");
+            return Map6x6::Identity();
         }
 
         amrex::ParticleReal m_theta; //! dipole bending angle (rad)

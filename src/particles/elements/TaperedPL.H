@@ -14,6 +14,7 @@
 #include "mixin/alignment.H"
 #include "mixin/beamoptic.H"
 #include "mixin/thin.H"
+#include "mixin/lineartransport.H"
 #include "mixin/named.H"
 #include "mixin/nofinalize.H"
 
@@ -21,6 +22,7 @@
 #include <AMReX_REAL.H>
 
 #include <cmath>
+#include <stdexcept>
 
 
 namespace impactx
@@ -28,6 +30,7 @@ namespace impactx
     struct TaperedPL
     : public elements::mixin::Named,
       public elements::mixin::BeamOptic<TaperedPL>,
+      public elements::mixin::LinearTransport<TaperedPL>,
       public elements::mixin::Thin,
       public elements::mixin::Alignment,
       public elements::mixin::NoFinalize
@@ -136,6 +139,22 @@ namespace impactx
 
         /** This pushes the reference particle. */
         using Thin::operator();
+
+        /** This pushes the covariance matrix. */
+        using LinearTransport::operator();
+
+        /** This function returns the linear transport map.
+         *
+         * @param[in] refpart reference particle
+         * @returns 6x6 transport matrix
+         */
+        AMREX_GPU_HOST AMREX_FORCE_INLINE
+        Map6x6
+        transport_map ([[maybe_unused]] RefPart const & AMREX_RESTRICT refpart) const
+        {
+            throw std::runtime_error(std::string(type) + ": Envelope tracking is not yet implemented!");
+            return Map6x6::Identity();
+        }
 
         amrex::ParticleReal m_k; //! linear focusing strength (field gradient)
         amrex::ParticleReal m_taper; //! horizontal taper parameter

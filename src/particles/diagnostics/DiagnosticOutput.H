@@ -11,38 +11,62 @@
 #define IMPACTX_DIAGNOSTIC_OUTPUT_H
 
 #include "particles/ImpactXParticleContainer.H"
+#include "particles/CovarianceMatrix.H"
 
 #include <string>
 
 
 namespace impactx::diagnostics
 {
-    /** Type of beam diagnostic output
-     */
-    enum class OutputType
-    {
-        PrintNonlinearLensInvariants, ///< ASCII diagnostics for the IOTA nonlinear lens, for small tests only
-        PrintRefParticle, ///< ASCII diagnostics
-        PrintReducedBeamCharacteristics ///< ASCII diagnostics, for beam momenta and Twiss parameters
-    };
-
-    /** ASCII output diagnostics associated with the beam.
+    /** ASCII output diagnostics associated with the beam particles.
      *
-     * This temporary implementation uses ASCII output.
-     * It is intended only for small tests where IO performance is not
-     * a concern. The implementation here serializes IO.
+     * This prints reduced beam characteristics derived from particles in ASCII.
      *
      * @param pc container of the particles use for diagnostics
-     * @param otype the type of output to produce
      * @param file_name the file name to write to
      * @param step the global step
      * @param append open a new file with a fresh header (false) or append data to an existing file (true)
      */
-    void DiagnosticOutput (ImpactXParticleContainer const & pc,
-                           OutputType otype,
-                           std::string file_name,
-                           int step = 0,
-                           bool append = false);
+    void DiagnosticOutput (
+        ImpactXParticleContainer const & pc,
+        std::string file_name,
+        int step = 0,
+        bool append = false
+    );
+
+    /** ASCII output diagnostics associated with the covariance matrix.
+     *
+     * This prints reduced beam characteristics derived from the envelope description in ASCII.
+     *
+     * @param cm covariance matrix
+     * @param ref_part reference particle
+     * @param file_name the file name to write to
+     * @param step the global step
+     * @param append open a new file with a fresh header (false) or append data to an existing file (true)
+     */
+    void DiagnosticOutput (
+        Map6x6 const & cm,
+        RefPart const & ref_part,
+        std::string file_name,
+        int step = 0,
+        bool append = false
+    );
+
+    /** ASCII output diagnostics associated with the reference particle.
+     *
+     * This prints reference particle properties in ASCII.
+     *
+     * @param ref_part reference particle
+     * @param file_name the file name to write to
+     * @param step the global step
+     * @param append open a new file with a fresh header (false) or append data to an existing file (true)
+     */
+    void DiagnosticOutput (
+        RefPart const & ref_part,
+        std::string file_name,
+        int step = 0,
+        bool append = false
+    );
 
 } // namespace impactx::diagnostics
 

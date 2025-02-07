@@ -15,6 +15,7 @@
 #include "mixin/alignment.H"
 #include "mixin/pipeaperture.H"
 #include "mixin/beamoptic.H"
+#include "mixin/lineartransport.H"
 #include "mixin/named.H"
 #include "mixin/thick.H"
 
@@ -106,6 +107,7 @@ namespace RFCavityData
     struct RFCavity
     : public elements::mixin::Named,
       public elements::mixin::BeamOptic<RFCavity>,
+      public elements::mixin::LinearTransport<RFCavity>,
       public elements::mixin::Thick,
       public elements::mixin::Alignment,
       public elements::mixin::PipeAperture
@@ -313,6 +315,22 @@ namespace RFCavityData
 
             // advance integrated path length
             refpart.s = s + slice_ds;
+        }
+
+        /** This pushes the covariance matrix. */
+        using LinearTransport::operator();
+
+        /** This function returns the linear transport map.
+         *
+         * @param[in] refpart reference particle
+         * @returns 6x6 transport matrix
+         */
+        AMREX_GPU_HOST AMREX_FORCE_INLINE
+        Map6x6
+        transport_map ([[maybe_unused]] RefPart const & AMREX_RESTRICT refpart) const
+        {
+            throw std::runtime_error(std::string(type) + ": Envelope tracking is not yet implemented!");
+            return Map6x6::Identity();
         }
 
         /** This evaluates the on-axis RF electric field at a fixed location

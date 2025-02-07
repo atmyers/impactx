@@ -15,6 +15,7 @@
 #include "mixin/pipeaperture.H"
 #include "mixin/beamoptic.H"
 #include "mixin/thick.H"
+#include "mixin/lineartransport.H"
 #include "mixin/named.H"
 #include "mixin/nofinalize.H"
 
@@ -23,6 +24,7 @@
 #include <AMReX_Print.H>      // for PrintToFile
 
 #include <cmath>
+#include <stdexcept>
 
 
 namespace impactx
@@ -30,6 +32,7 @@ namespace impactx
     struct ChrQuad
     : public elements::mixin::Named,
       public elements::mixin::BeamOptic<ChrQuad>,
+      public elements::mixin::LinearTransport<ChrQuad>,
       public elements::mixin::Thick,
       public elements::mixin::Alignment,
       public elements::mixin::PipeAperture,
@@ -258,6 +261,22 @@ namespace impactx
 
             // advance integrated path length
             refpart.s = s + slice_ds;
+        }
+
+        /** This pushes the covariance matrix. */
+        using LinearTransport::operator();
+
+        /** This function returns the linear transport map.
+         *
+         * @param[in] refpart reference particle
+         * @returns 6x6 transport matrix
+         */
+        AMREX_GPU_HOST AMREX_FORCE_INLINE
+        Map6x6
+        transport_map ([[maybe_unused]] RefPart const & AMREX_RESTRICT refpart) const
+        {
+            throw std::runtime_error(std::string(type) + ": Envelope tracking is not yet implemented!");
+            return Map6x6::Identity();
         }
 
         amrex::ParticleReal m_k; //! quadrupole strength in 1/m^2 (or T/m)

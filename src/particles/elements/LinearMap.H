@@ -21,6 +21,7 @@
 #include <AMReX_REAL.H>
 
 #include <cmath>
+#include <stdexcept>
 
 
 namespace impactx
@@ -28,8 +29,8 @@ namespace impactx
     struct LinearMap
     : public elements::mixin::Named,
       public elements::mixin::BeamOptic<LinearMap>,
+      public elements::mixin::LinearTransport<LinearMap>,
       public elements::mixin::Alignment,
-      public elements::mixin::LinearTransport,
       public elements::mixin::NoFinalize
     {
         static constexpr auto type = "LinearMap";
@@ -48,7 +49,7 @@ namespace impactx
          * @param name a user defined and not necessarily unique name of the element
          */
         LinearMap (
-            LinearTransport::Map6x6 const & R,
+            Map6x6 const & R,
             amrex::ParticleReal ds = 0,
             amrex::ParticleReal dx = 0,
             amrex::ParticleReal dy = 0,
@@ -173,7 +174,23 @@ namespace impactx
             return m_ds;
         }
 
-        LinearTransport::Map6x6 m_transport_map;  // 6x6 transport map
+        /** This pushes the covariance matrix. */
+        using LinearTransport::operator();
+
+        /** This function returns the linear transport map.
+         *
+         * @param[in] refpart reference particle
+         * @returns 6x6 transport matrix
+         */
+        AMREX_GPU_HOST AMREX_FORCE_INLINE
+        Map6x6
+        transport_map ([[maybe_unused]] RefPart const & AMREX_RESTRICT refpart) const
+        {
+            throw std::runtime_error(std::string(type) + ": Envelope tracking is not yet implemented!");
+            return Map6x6::Identity();
+        }
+
+        Map6x6 m_transport_map;  // 6x6 transport map
         amrex::ParticleReal m_ds;  // finite ds allowed for bookkeeping, but we do not allow slicing
     };
 

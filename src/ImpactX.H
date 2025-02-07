@@ -48,6 +48,10 @@ namespace impactx
          */
         void finalize ();
 
+        /** Finalize elements
+         */
+        void finalize_elements ();
+
         /** Initialize AMReX blocks/grids for domain decomposition & space charge mesh.
          *
          * This must come first, before particle beams and lattice elements are
@@ -103,6 +107,12 @@ namespace impactx
         /** Run the particle tracking simulation loop
          */
         void track_particles ();
+
+        /** Run the envelope tracking simulation loop
+         *
+         * Modeled as linear transport of the covariance matrix.
+         */
+        void track_envelope ();
 
         /** Query input for warning logger variables and set up warning logger accordingly
          *

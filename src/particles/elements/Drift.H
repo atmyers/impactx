@@ -12,12 +12,12 @@
 
 #include "particles/ImpactXParticleContainer.H"
 #include "mixin/alignment.H"
-#include "mixin/pipeaperture.H"
 #include "mixin/beamoptic.H"
-#include "mixin/thick.H"
+#include "mixin/lineartransport.H"
 #include "mixin/named.H"
 #include "mixin/nofinalize.H"
-#include "mixin/lineartransport.H"
+#include "mixin/pipeaperture.H"
+#include "mixin/thick.H"
 
 #include <AMReX_Extension.H>
 #include <AMReX_REAL.H>
@@ -32,6 +32,7 @@ namespace impactx
     struct Drift
     : public elements::mixin::Named,
       public elements::mixin::BeamOptic<Drift>,
+      public elements::mixin::LinearTransport<Drift>,
       public elements::mixin::Thick,
       public elements::mixin::Alignment,
       public elements::mixin::PipeAperture,
@@ -173,13 +174,16 @@ namespace impactx
             refpart.s = s + slice_ds;
         }
 
+        /** This pushes the covariance matrix. */
+        using LinearTransport::operator();
+
         /** This function returns the linear transport map.
          *
          * @returns 6x6 transport matrix
          */
-        AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-        elements::mixin::LinearTransport::Map6x6
-        transport_map (RefPart & AMREX_RESTRICT refpart) const
+        AMREX_GPU_HOST AMREX_FORCE_INLINE
+        Map6x6
+        transport_map (RefPart const & AMREX_RESTRICT refpart) const
         {
             using namespace amrex::literals; // for _rt and _prt
 
@@ -191,7 +195,7 @@ namespace impactx
             amrex::ParticleReal const betgam2 = std::pow(pt_ref, 2) - 1.0_prt;
 
             // assign linear map matrix elements
-            elements::mixin::LinearTransport::Map6x6 R = elements::mixin::LinearTransport::Map6x6::Identity();
+            Map6x6 R = Map6x6::Identity();
             R(1,2) = slice_ds;
             R(3,4) = slice_ds;
             R(5,6) = slice_ds / betgam2;
