@@ -180,6 +180,10 @@ class ImpactX:
         """
         Run the particle tracking simulation loop.
         """
+    def track_reference(self, arg0: RefPart) -> None:
+        """
+        Run the reference orbit tracking simulation loop.
+        """
     @property
     def abort_on_unused_inputs(self) -> int:
         """
