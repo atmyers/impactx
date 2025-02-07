@@ -9,14 +9,14 @@ How to select a tracking mode
 
 ImpactX can be run using any of three distinct tracking modes.  ImpactX's most powerful tracking mode makes use of symplectic particle tracking with collective effects included (space charge, CSR, wakefields, etc.).
 Additionally, ImpactX provides two simplified tracking modes to aid scientists through every step, from beamline inception to operation:
-only tracking of the reference particle orbit, or tracking of the beam envelope (6x6 covariance matrix) through linearized transport maps.
+tracking of the beam envelope (6x6 covariance matrix) through linearized transport maps, or only tracking of the reference particle orbit.
 
 ================== =============== =============== ==================
 Mode               Use Case        Generality      Collective Effects
 ================== =============== =============== ==================
 Particle Tracking  Full Dynamics   Most general    Supported
+Envelope Tracking  Rapid Scans     Linearized      `Soon <https://github.com/ECP-WarpX/impactx/issues/826>`__
 Reference Tracking Early Design    Reference orbit No
-Envelope Tracking  Rapid Scans     Linearized      Not yet
 ================== =============== =============== ==================
 
 
