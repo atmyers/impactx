@@ -11,7 +11,7 @@
 #define IMPACT_X_H
 
 #include "particles/distribution/All.H"
-#include "particles/elements/All.H"
+#include "elements/All.H"
 
 #include "initialization/AmrCoreData.H"
 
@@ -90,7 +90,7 @@ namespace impactx
             int npart
         );
 
-        /** Validate the simulation is ready to run via @see evolve
+        /** Validate the simulation is ready to run the particle tracking loop via @see track_particles
          */
         void validate ();
 
@@ -134,7 +134,7 @@ namespace impactx
         void ResizeMesh ();
 
         /** these are elements defining the accelerator lattice */
-        std::list<KnownElements> m_lattice;
+        std::list<elements::KnownElements> m_lattice;
 
         /** Was init_grids already called?
          *

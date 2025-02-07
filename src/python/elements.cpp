@@ -6,8 +6,8 @@
 #include "pyImpactX.H"
 
 #include <particles/Push.H>
-#include <particles/elements/All.H>
-#include <particles/elements/mixin/lineartransport.H>
+#include <elements/All.H>
+#include <elements/mixin/lineartransport.H>
 #include <AMReX.H>
 
 #include <optional>
@@ -158,6 +158,8 @@ namespace
 
 void init_elements(py::module& m)
 {
+    using namespace elements;
+
     m.attr("Map6x6") = py::type::of<Map6x6>();
 
     py::module_ me = m.def_submodule(
