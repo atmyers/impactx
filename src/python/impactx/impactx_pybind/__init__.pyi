@@ -20,6 +20,7 @@ import pybind11_stubgen.typing_ext
 
 import amrex.space3d.amrex_3d_pybind
 from amrex import space3d as amr
+from amrex.space3d.amrex_3d_pybind import SmallMatrix_6x6_F_SI1_double as Map6x6
 
 from . import distribution, elements, wakeconvolution
 
@@ -30,9 +31,11 @@ __all__ = [
     "ImpactXParConstIter",
     "ImpactXParIter",
     "ImpactXParticleContainer",
+    "Map6x6",
     "RefPart",
     "amr",
     "coordinate_transformation",
+    "create_covariance_matrix",
     "distribution",
     "elements",
     "push",
@@ -103,7 +106,7 @@ class ImpactX:
         npart: int,
     ) -> None:
         """
-        Generate and add n particles to the particle container.
+        Particle tracking mode:Generate and add n particles to the particle container.
 
         Will also resize the geometry based on the updated particle
         distribution's extent and then redistribute particles in according
@@ -123,6 +126,22 @@ class ImpactX:
         Deallocate all contexts and data.
         """
     def init_beam_distribution_from_inputs(self) -> None: ...
+    def init_envelope(
+        self,
+        ref: RefPart,
+        distr: distribution.Empty
+        | distribution.Gaussian
+        | distribution.Kurth4D
+        | distribution.Kurth6D
+        | distribution.KVdist
+        | distribution.Thermal
+        | distribution.Triangle
+        | distribution.Semigaussian
+        | distribution.Waterbag,
+    ) -> None:
+        """
+        Envelope tracking mode:Create a 6x6 covariance matrix from a distribution and then initialize the the simulation for envelope tracking relative to a reference particle.
+        """
     def init_grids(self) -> None:
         """
         Initialize AMReX blocks/grids for domain decomposition & space charge mesh.
@@ -152,6 +171,10 @@ class ImpactX:
     ) -> amrex.space3d.amrex_3d_pybind.MultiFab:
         """
         space charge force (vector: x,y,z) per level
+        """
+    def track_envelope(self) -> None:
+        """
+        Run the envelope tracking simulation loop.
         """
     def track_particles(self) -> None:
         """
@@ -661,6 +684,17 @@ def coordinate_transformation(
     Transform coordinates from fixed s to fixed to or vice versa.
     """
 
+def create_covariance_matrix(
+    arg0: distribution.Empty
+    | distribution.Gaussian
+    | distribution.Kurth4D
+    | distribution.Kurth6D
+    | distribution.KVdist
+    | distribution.Thermal
+    | distribution.Triangle
+    | distribution.Semigaussian
+    | distribution.Waterbag,
+) -> amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double: ...
 def push(
     pc: ImpactXParticleContainer,
     element: elements.Empty

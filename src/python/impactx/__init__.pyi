@@ -17,6 +17,7 @@ from __future__ import annotations
 import os as os
 
 from amrex import space3d as amr
+from amrex.space3d.amrex_3d_pybind import SmallMatrix_6x6_F_SI1_double as Map6x6
 from impactx.distribution_input_helpers import twiss
 from impactx.extensions.ImpactXParticleContainer import (
     register_ImpactXParticleContainer_extension,
@@ -30,6 +31,7 @@ from impactx.impactx_pybind import (
     ImpactXParticleContainer,
     RefPart,
     coordinate_transformation,
+    create_covariance_matrix,
     distribution,
     elements,
     push,
@@ -53,9 +55,11 @@ __all__ = [
     "ImpactXParIter",
     "ImpactXParticleContainer",
     "MADXParser",
+    "Map6x6",
     "RefPart",
     "amr",
     "coordinate_transformation",
+    "create_covariance_matrix",
     "cxx",
     "distribution",
     "distribution_input_helpers",

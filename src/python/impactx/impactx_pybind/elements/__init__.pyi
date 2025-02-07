@@ -67,6 +67,7 @@ class Aperture(mixin.Named, mixin.Thin, mixin.Alignment):
         A short collimator element applying a transverse aperture boundary.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -75,6 +76,15 @@ class Aperture(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def action(self) -> str:
@@ -132,6 +142,7 @@ class BeamMonitor(mixin.Thin):
         """
         This element writes the particle beam out to openPMD data.
         """
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -140,6 +151,15 @@ class BeamMonitor(mixin.Thin):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def alpha(self) -> float:
@@ -200,6 +220,7 @@ class Buncher(mixin.Named, mixin.Thin, mixin.Alignment):
         A short linear RF cavity element at zero-crossing for bunching.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -208,6 +229,15 @@ class Buncher(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def V(self) -> float:
@@ -244,6 +274,7 @@ class CFbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         An ideal combined function bend (sector bend with quadrupole component).
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -252,6 +283,15 @@ class CFbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def k(self) -> float:
@@ -288,6 +328,7 @@ class ChrAcc(mixin.Named, mixin.Thick, mixin.Alignment):
         A region of Uniform Acceleration, with chromatic effects included.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -296,6 +337,15 @@ class ChrAcc(mixin.Named, mixin.Thick, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def bz(self) -> float:
@@ -330,6 +380,7 @@ class ChrDrift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         A Drift with chromatic effects included.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -338,6 +389,15 @@ class ChrDrift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
 
 class ChrPlasmaLens(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
@@ -360,6 +420,7 @@ class ChrPlasmaLens(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeApertur
         An active Plasma Lens with chromatic effects included.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -368,6 +429,15 @@ class ChrPlasmaLens(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeApertur
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def k(self) -> float:
@@ -404,6 +474,7 @@ class ChrQuad(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         A Quadrupole magnet with chromatic effects included.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -412,6 +483,15 @@ class ChrQuad(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def k(self) -> float:
@@ -449,6 +529,7 @@ class ConstF(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         A linear Constant Focusing element.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -457,6 +538,15 @@ class ConstF(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def kt(self) -> float:
@@ -498,6 +588,7 @@ class DipEdge(mixin.Named, mixin.Thin, mixin.Alignment):
         Edge focusing associated with bend entry or exit.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -506,6 +597,15 @@ class DipEdge(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def K2(self) -> float:
@@ -554,6 +654,7 @@ class Drift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         A drift.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -562,6 +663,15 @@ class Drift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
 
 class Empty(mixin.Thin):
@@ -572,6 +682,7 @@ class Empty(mixin.Thin):
         This element does nothing.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -580,6 +691,15 @@ class Empty(mixin.Thin):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
 
 class ExactDrift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
@@ -600,6 +720,7 @@ class ExactDrift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         A Drift using the exact nonlinear map.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -608,6 +729,15 @@ class ExactDrift(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
 
 class ExactSbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
@@ -630,6 +760,7 @@ class ExactSbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         An ideal sector bend using the exact nonlinear map.  When B = 0, the reference bending radius is defined by r0 = length / (angle in rad), corresponding to a magnetic field of B = rigidity / r0; otherwise the reference bending radius is defined by r0 = rigidity / B.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -638,6 +769,15 @@ class ExactSbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def B(self) -> float:
@@ -671,6 +811,7 @@ class Kicker(mixin.Named, mixin.Thin, mixin.Alignment):
         A thin transverse kicker element. Kicks are for unit "dimensionless" or in "T-m".
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -679,6 +820,15 @@ class Kicker(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def xkick(self) -> float:
@@ -833,7 +983,7 @@ class KnownElementsList:
         Return and remove the last element of the list.
         """
 
-class LinearMap(mixin.Named, mixin.Alignment, mixin.LinearTransport):
+class LinearMap(mixin.Named, mixin.Alignment):
     @staticmethod
     def _pybind11_conduit_v1_(*args, **kwargs): ...
     def __init__(
@@ -849,6 +999,7 @@ class LinearMap(mixin.Named, mixin.Alignment, mixin.LinearTransport):
         (A user-provided linear map, represented as a 6x6 transport matrix.)
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -857,6 +1008,15 @@ class LinearMap(mixin.Named, mixin.Alignment, mixin.LinearTransport):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def R(self) -> amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double:
@@ -888,6 +1048,7 @@ class Marker(mixin.Named, mixin.Thin):
         This named element does nothing.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -896,6 +1057,15 @@ class Marker(mixin.Named, mixin.Thin):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
 
 class Multipole(mixin.Named, mixin.Thin, mixin.Alignment):
@@ -915,6 +1085,7 @@ class Multipole(mixin.Named, mixin.Thin, mixin.Alignment):
         A general thin multipole element.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -923,6 +1094,15 @@ class Multipole(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def K_normal(self) -> float:
@@ -962,6 +1142,7 @@ class NonlinearLens(mixin.Named, mixin.Thin, mixin.Alignment):
         Single short segment of the nonlinear magnetic insert element.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -970,6 +1151,15 @@ class NonlinearLens(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def cnll(self) -> float:
@@ -994,6 +1184,7 @@ class PRot(mixin.Named, mixin.Thin):
         An exact pole-face rotation in the x-z plane. Both angles are in degrees.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1002,6 +1193,15 @@ class PRot(mixin.Named, mixin.Thin):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def phi_in(self) -> float:
@@ -1033,6 +1233,7 @@ class PlaneXYRot(mixin.Named, mixin.Thin, mixin.Alignment):
         A rotation in the x-y plane.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1041,6 +1242,15 @@ class PlaneXYRot(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def angle(self) -> float:
@@ -1131,6 +1341,7 @@ class Quad(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         A Quadrupole magnet.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1139,6 +1350,15 @@ class Quad(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def k(self) -> float:
@@ -1172,6 +1392,7 @@ class RFCavity(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         An RF cavity.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1180,6 +1401,15 @@ class RFCavity(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def escale(self) -> float:
@@ -1229,6 +1459,7 @@ class Sbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         An ideal sector bend.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1237,6 +1468,15 @@ class Sbend(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def rc(self) -> float:
@@ -1263,6 +1503,7 @@ class ShortRF(mixin.Named, mixin.Thin, mixin.Alignment):
         A short RF cavity element.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1271,6 +1512,15 @@ class ShortRF(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def V(self) -> float:
@@ -1316,6 +1566,7 @@ class SoftQuadrupole(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeApertu
         A soft-edge quadrupole.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1324,6 +1575,15 @@ class SoftQuadrupole(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeApertu
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def gscale(self) -> float:
@@ -1363,6 +1623,7 @@ class SoftSolenoid(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture
         A soft-edge solenoid.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1371,6 +1632,15 @@ class SoftSolenoid(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def bscale(self) -> float:
@@ -1413,6 +1683,7 @@ class Sol(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
         An ideal hard-edge Solenoid magnet.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1421,6 +1692,15 @@ class Sol(mixin.Named, mixin.Thick, mixin.Alignment, mixin.PipeAperture):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def ks(self) -> float:
@@ -1453,6 +1733,7 @@ class TaperedPL(mixin.Named, mixin.Thin, mixin.Alignment):
                      where :math:`g` is the (linear) field gradient in T/m and :math:`D_x` is the targeted horizontal dispersion in m.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1461,6 +1742,15 @@ class TaperedPL(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def k(self) -> float:
@@ -1500,6 +1790,7 @@ class ThinDipole(mixin.Named, mixin.Thin, mixin.Alignment):
         A thin kick model of a dipole bend.
         """
     def __repr__(self) -> str: ...
+    @typing.overload
     def push(
         self,
         pc: impactx.impactx_pybind.ImpactXParticleContainer,
@@ -1508,6 +1799,15 @@ class ThinDipole(mixin.Named, mixin.Thin, mixin.Alignment):
     ) -> None:
         """
         Push first the reference particle, then all other particles.
+        """
+    @typing.overload
+    def push(
+        self,
+        cm: amrex.space3d.amrex_3d_pybind.SmallMatrix_6x6_F_SI1_double,
+        ref: impactx.impactx_pybind.RefPart,
+    ) -> None:
+        """
+        Linear push of the covariance matrix through an element. Expects that the reference particle was advanced first.
         """
     @property
     def rc(self) -> float:
