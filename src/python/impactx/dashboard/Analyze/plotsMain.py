@@ -9,11 +9,10 @@ License: BSD-3-Clause-LBNL
 import glob
 import os
 
-from trame.widgets import matplotlib, plotly, vuetify
+from trame.widgets import matplotlib, plotly
 
-from ..trame_setup import setup_server
-from .analyzeFunctions import AnalyzeFunctions
-from .plot_ParameterEvolutionOverS.overS import line_plot_1d
+from .. import setup_server, vuetify
+from . import AnalyzeFunctions, line_plot_1d
 
 server, state, ctrl = setup_server()
 

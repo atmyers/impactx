@@ -10,18 +10,21 @@ import sys
 
 from trame.ui.router import RouterViewLayout
 from trame.ui.vuetify import SinglePageWithDrawerLayout
-from trame.widgets import router, vuetify, xterm
+from trame.widgets import router, xterm
 
-from .Analyze.plotsMain import AnalyzeSimulation
-from .Input.components import NavigationComponents
-from .Input.csrConfiguration.csrMain import csrConfiguration
-from .Input.distributionParameters.distributionMain import DistributionParameters
-from .Input.inputParameters.inputMain import InputParameters
-from .Input.latticeConfiguration.latticeMain import LatticeConfiguration
-from .Input.space_charge_configuration.spaceChargeMain import SpaceChargeConfiguration
+from . import (
+    AnalyzeSimulation,
+    DistributionParameters,
+    GeneralToolbar,
+    InputParameters,
+    LatticeConfiguration,
+    NavigationComponents,
+    SpaceChargeConfiguration,
+    csrConfiguration,
+    setup_server,
+    vuetify,
+)
 from .start import main
-from .Toolbar.controls import GeneralToolbar
-from .trame_setup import setup_server
 
 server, state, ctrl = setup_server()
 

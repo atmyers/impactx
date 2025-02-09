@@ -1,6 +1,6 @@
 from typing import Optional
 
-from . import setup_server, vuetify
+from .. import setup_server, vuetify
 from .generalFunctions import generalFunctions
 
 server, state, ctrl = setup_server()

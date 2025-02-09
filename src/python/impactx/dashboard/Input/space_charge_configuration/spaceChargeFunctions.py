@@ -1,5 +1,5 @@
-from ...trame_setup import setup_server
-from ..generalFunctions import generalFunctions
+from ... import setup_server
+from .. import generalFunctions
 
 server, state, ctrl = setup_server()
 

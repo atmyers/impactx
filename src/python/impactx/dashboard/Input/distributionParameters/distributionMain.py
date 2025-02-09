@@ -12,15 +12,9 @@ from distribution_input_helpers import twiss
 
 from impactx import distribution
 
-from .. import (
-    CardComponents,
-    DashboardDefaults,
-    InputComponents,
-    generalFunctions,
-    setup_server,
-    vuetify,
-)
-from .distributionFunctions import DistributionFunctions
+from ... import setup_server, vuetify
+from .. import CardComponents, DashboardDefaults, InputComponents, generalFunctions
+from . import DistributionFunctions
 
 server, state, ctrl = setup_server()
 
