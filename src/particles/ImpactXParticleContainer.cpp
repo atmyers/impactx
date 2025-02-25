@@ -130,8 +130,8 @@ namespace impactx
         // number of particles to add
         int const np = x.size();
 
-        // we add particles to lev 0, tile 0 of the first box assigned to this proc
-        int lid = 0, gid = 0, tid = 0;
+        // we add particles to lev 0, grid 0
+        int lid = 0, gid = 0;
         {
             const auto& pmap = ParticleDistributionMap(lid).ProcessorMap();
             auto it = std::find(pmap.begin(), pmap.end(), amrex::ParallelDescriptor::MyProc());
@@ -141,65 +141,94 @@ namespace impactx
                 gid = *it;
             }
         }
-        auto& particle_tile = DefineAndReturnParticleTile(lid, gid, tid);
 
-        auto old_np = particle_tile.numParticles();
-        auto new_np = old_np + np;
-        particle_tile.resize(new_np);
-
-        // Update NextID to include particles created in this function
-        int pid;
-#ifdef AMREX_USE_OMP
-#pragma omp critical (add_beam_nextid)
+	int nthreads = 1;
+#if defined(AMREX_USE_OMP)
+	nthreads = omp_get_max_threads();
 #endif
-        {
-            pid = ParticleType::NextID();
-            ParticleType::NextID(pid+np);
-        }
+
+	const auto& ba = ParticleBoxArray(lid);
+	auto n_logical =  numTilesInBox(ba[gid], true, tile_size);
+
+	if (n_logical < nthreads ) {
+	    amrex::Print() << "Too few tiles for the number of OpenMP threads. Parallelization will be poor. \n";
+	}
+
+	for (int ithr = 0; ithr < nthreads; ++ithr) {
+	    DefineAndReturnParticleTile(lid, gid, ithr);
+	}
+
+	int pid = ParticleType::NextID();
+	ParticleType::NextID(pid+np);
         AMREX_ALWAYS_ASSERT_WITH_MESSAGE(
         static_cast<amrex::Long>(pid) + static_cast<amrex::Long>(np) < amrex::LongParticleIds::LastParticleID,
             "ERROR: overflow on particle id numbers");
 
-        const int cpuid = amrex::ParallelDescriptor::MyProc();
+#if defined(AMREX_USE_OMP)
+#pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
+#endif
+	{
+	    int tid = omp_get_thread_num();
+	    int nr = np / nthreads;
+	    int nlft = np - nr*nthreads;
 
-        auto & soa = particle_tile.GetStructOfArrays().GetRealData();
-        amrex::ParticleReal * const AMREX_RESTRICT x_arr = soa[RealSoA::x].dataPtr();
-        amrex::ParticleReal * const AMREX_RESTRICT y_arr = soa[RealSoA::y].dataPtr();
-        amrex::ParticleReal * const AMREX_RESTRICT t_arr = soa[RealSoA::t].dataPtr();
-        amrex::ParticleReal * const AMREX_RESTRICT px_arr = soa[RealSoA::px].dataPtr();
-        amrex::ParticleReal * const AMREX_RESTRICT py_arr = soa[RealSoA::py].dataPtr();
-        amrex::ParticleReal * const AMREX_RESTRICT pt_arr = soa[RealSoA::pt].dataPtr();
-        amrex::ParticleReal * const AMREX_RESTRICT qm_arr = soa[RealSoA::qm].dataPtr();
-        amrex::ParticleReal * const AMREX_RESTRICT w_arr  = soa[RealSoA::w ].dataPtr();
+	    int num_to_add = 0;
+	    int my_index =0;
+	    if (tid < nlft) { // get nr+1 items
+		my_index = tid * (nr+1);
+		num_to_add = nr+1;
+	    } else {         // get nr items
+		my_index = tid * nr + nlft;
+		num_to_add = nr;
+	    }
 
-        uint64_t * const AMREX_RESTRICT idcpu_arr = particle_tile.GetStructOfArrays().GetIdCPUData().dataPtr();
+	    auto& particle_tile = ParticlesAt(lid, gid, tid);
+	    auto old_np = particle_tile.numParticles();
+	    auto new_np = old_np + num_to_add;
+	    particle_tile.resize(new_np);
 
-        amrex::ParticleReal const * const AMREX_RESTRICT x_ptr = x.data();
-        amrex::ParticleReal const * const AMREX_RESTRICT y_ptr = y.data();
-        amrex::ParticleReal const * const AMREX_RESTRICT t_ptr = t.data();
-        amrex::ParticleReal const * const AMREX_RESTRICT px_ptr = px.data();
-        amrex::ParticleReal const * const AMREX_RESTRICT py_ptr = py.data();
-        amrex::ParticleReal const * const AMREX_RESTRICT pt_ptr = pt.data();
+	    const int cpuid = amrex::ParallelDescriptor::MyProc();
 
-        amrex::ParallelFor(np,
-        [=] AMREX_GPU_DEVICE (int i) noexcept
-        {
-            idcpu_arr[old_np+i] = amrex::SetParticleIDandCPU(pid + i, cpuid);
+	    auto & soa = particle_tile.GetStructOfArrays().GetRealData();
+	    amrex::ParticleReal * const AMREX_RESTRICT x_arr = soa[RealSoA::x].dataPtr();
+	    amrex::ParticleReal * const AMREX_RESTRICT y_arr = soa[RealSoA::y].dataPtr();
+	    amrex::ParticleReal * const AMREX_RESTRICT t_arr = soa[RealSoA::t].dataPtr();
+	    amrex::ParticleReal * const AMREX_RESTRICT px_arr = soa[RealSoA::px].dataPtr();
+	    amrex::ParticleReal * const AMREX_RESTRICT py_arr = soa[RealSoA::py].dataPtr();
+	    amrex::ParticleReal * const AMREX_RESTRICT pt_arr = soa[RealSoA::pt].dataPtr();
+	    amrex::ParticleReal * const AMREX_RESTRICT qm_arr = soa[RealSoA::qm].dataPtr();
+	    amrex::ParticleReal * const AMREX_RESTRICT w_arr  = soa[RealSoA::w ].dataPtr();
 
-            x_arr[old_np+i] = x_ptr[i];
-            y_arr[old_np+i] = y_ptr[i];
-            t_arr[old_np+i] = t_ptr[i];
+	    uint64_t * const AMREX_RESTRICT idcpu_arr = particle_tile.GetStructOfArrays().GetIdCPUData().dataPtr();
 
-            px_arr[old_np+i] = px_ptr[i];
-            py_arr[old_np+i] = py_ptr[i];
-            pt_arr[old_np+i] = pt_ptr[i];
-            qm_arr[old_np+i] = qm;
-            w_arr[old_np+i]  = bchchg/ablastr::constant::SI::q_e/np;
-        });
+	    amrex::ParticleReal const * const AMREX_RESTRICT x_ptr = x.data();
+	    amrex::ParticleReal const * const AMREX_RESTRICT y_ptr = y.data();
+	    amrex::ParticleReal const * const AMREX_RESTRICT t_ptr = t.data();
+	    amrex::ParticleReal const * const AMREX_RESTRICT px_ptr = px.data();
+	    amrex::ParticleReal const * const AMREX_RESTRICT py_ptr = py.data();
+	    amrex::ParticleReal const * const AMREX_RESTRICT pt_ptr = pt.data();
 
-        // safety first: in case passed attribute arrays were temporary, we
-        // want to make sure the ParallelFor has ended here
-        amrex::Gpu::streamSynchronize();
+	    amrex::ParallelFor(num_to_add,
+	        [=] AMREX_GPU_DEVICE (int i) noexcept
+		{
+		    idcpu_arr[old_np+i] = amrex::SetParticleIDandCPU(pid + my_index + i, cpuid);
+
+		    x_arr[old_np+i] = x_ptr[my_index+i];
+		    y_arr[old_np+i] = y_ptr[my_index+i];
+		    t_arr[old_np+i] = t_ptr[my_index+i];
+
+		    px_arr[old_np+i] = px_ptr[my_index+i];
+		    py_arr[old_np+i] = py_ptr[my_index+i];
+		    pt_arr[old_np+i] = pt_ptr[my_index+i];
+
+		    qm_arr[old_np+i] = qm;
+		    w_arr[old_np+i]  = bchchg/ablastr::constant::SI::q_e/np;
+		});
+	}
+
+	// safety first: in case passed attribute arrays were temporary, we
+	// want to make sure the ParallelFor has ended here
+	amrex::Gpu::streamSynchronize();
     }
 
     void
