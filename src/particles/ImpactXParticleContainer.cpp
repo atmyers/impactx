@@ -13,6 +13,7 @@
 
 #include <ablastr/constant.H>
 #include <ablastr/particles/ParticleMoments.H>
+#include <ablastr/warn_manager/WarnManager.H>
 
 #include <AMReX.H>
 #include <AMReX_AmrCore.H>
@@ -151,7 +152,12 @@ namespace impactx
     auto n_logical =  numTilesInBox(ba[gid], true, tile_size);
 
     if (n_logical < nthreads ) {
-        amrex::Print() << "Too few tiles for the number of OpenMP threads. Parallelization will be poor. \n";
+        ablastr::warn_manager::WMRecordWarning(
+                    "Impactx::AddNParticles",
+                    "Too few tiles for the number of OpenMP threads. "
+                    "Parallelization will be poor.",
+                    ablastr::warn_manager::WarnPriority::medium
+                                               );
     }
 
     for (int ithr = 0; ithr < nthreads; ++ithr) {
@@ -167,20 +173,24 @@ namespace impactx
 #if defined(AMREX_USE_OMP)
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    {
-        int tid = omp_get_thread_num();
-        int nr = np / nthreads;
-        int nlft = np - nr*nthreads;
+	{
+	    int tid = omp_get_thread_num();
 
-        int num_to_add = 0;
-        int my_index =0;
-        if (tid < nlft) { // get nr+1 items
-        my_index = tid * (nr+1);
-        num_to_add = nr+1;
-        } else {         // get nr items
-        my_index = tid * nr + nlft;
-        num_to_add = nr;
-        }
+            // we split up the np particles onto multiple tiles.
+            // some tiles will get nr and some will get nlft.
+            int nr = np / nthreads;
+	    int nlft = np - nr*nthreads;
+
+	    int num_to_add = 0; /* how many particles this tile will get*/
+	    int my_index = 0;
+
+	    if (tid < nlft) { // get nr+1 items
+		my_index = tid * (nr+1);
+		num_to_add = nr+1;
+	    } else {         // get nr items
+		my_index = tid * nr + nlft;
+		num_to_add = nr;
+	    }
 
         auto& particle_tile = ParticlesAt(lid, gid, tid);
         auto old_np = particle_tile.numParticles();
