@@ -109,6 +109,48 @@ namespace impactx
     }
 
     void
+    ImpactXParticleContainer::prepare ()
+    {
+	// make sure we have at least one box with enough tiles for each OpenMP thread
+
+	// make sure level 0, grid 0 exists
+        int lid = 0, gid = 0;
+        {
+            const auto& pmap = ParticleDistributionMap(lid).ProcessorMap();
+            auto it = std::find(pmap.begin(), pmap.end(), amrex::ParallelDescriptor::MyProc());
+            if (it == std::end(pmap)) {
+                amrex::Abort("Particle container needs to have at least one grid.");
+            } else {
+                gid = *it;
+            }
+        }
+
+	int nthreads = 1;
+#if defined(AMREX_USE_OMP)
+	nthreads = omp_get_max_threads();
+#endif
+
+	const auto& ba = ParticleBoxArray(lid);
+	auto n_logical =  numTilesInBox(ba[gid], true, tile_size);
+
+	int ntry = 0;
+	while ((n_logical < nthreads) && (ntry++ < 6)) {
+	    int idim = (ntry % 2) + 1;  // alternate between 1 and 2
+	    tile_size[idim] /= 2;
+	    n_logical =  numTilesInBox(ba[gid], true, tile_size);
+	}
+
+	if (n_logical < nthreads ) {
+	    amrex::Abort(
+		"ImpactParticleContainer::prepare() could not find good tile size for the number of OpenMP threads"
+		);
+	}
+
+	reserveData();
+	resizeData();
+    }
+
+    void
     ImpactXParticleContainer::AddNParticles (
         amrex::Gpu::DeviceVector<amrex::ParticleReal> const & x,
         amrex::Gpu::DeviceVector<amrex::ParticleReal> const & y,
@@ -148,18 +190,8 @@ namespace impactx
     nthreads = omp_get_max_threads();
 #endif
 
-    const auto& ba = ParticleBoxArray(lid);
-    auto n_logical =  numTilesInBox(ba[gid], true, tile_size);
-
-    if (n_logical < nthreads ) {
-        ablastr::warn_manager::WMRecordWarning(
-                    "Impactx::AddNParticles",
-                    "Too few tiles for the number of OpenMP threads. "
-                    "Parallelization will be poor.",
-                    ablastr::warn_manager::WarnPriority::medium
-                                               );
-    }
-
+    // split up particles over nthreads tiles
+    AMREX_ASSERT(numTilesInBox(ParticleBoxArray(lid)[gid], true, tile_size) >= nthreads );
     for (int ithr = 0; ithr < nthreads; ++ithr) {
         DefineAndReturnParticleTile(lid, gid, ithr);
     }
@@ -174,7 +206,10 @@ namespace impactx
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
 	{
-	    int tid = omp_get_thread_num();
+            int tid = 1;
+#if defined(AMREX_USE_OMP)
+	    tid = omp_get_thread_num();
+#endif
 
             // we split up the np particles onto multiple tiles.
             // some tiles will get nr and some will get nlft.
