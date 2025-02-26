@@ -111,9 +111,9 @@ namespace impactx
     void
     ImpactXParticleContainer::prepare ()
     {
-	// make sure we have at least one box with enough tiles for each OpenMP thread
+    // make sure we have at least one box with enough tiles for each OpenMP thread
 
-	// make sure level 0, grid 0 exists
+    // make sure level 0, grid 0 exists
         int lid = 0, gid = 0;
         {
             const auto& pmap = ParticleDistributionMap(lid).ProcessorMap();
@@ -125,29 +125,29 @@ namespace impactx
             }
         }
 
-	int nthreads = 1;
+    int nthreads = 1;
 #if defined(AMREX_USE_OMP)
-	nthreads = omp_get_max_threads();
+    nthreads = omp_get_max_threads();
 #endif
 
-	const auto& ba = ParticleBoxArray(lid);
-	auto n_logical =  numTilesInBox(ba[gid], true, tile_size);
+    const auto& ba = ParticleBoxArray(lid);
+    auto n_logical =  numTilesInBox(ba[gid], true, tile_size);
 
-	int ntry = 0;
-	while ((n_logical < nthreads) && (ntry++ < 6)) {
-	    int idim = (ntry % 2) + 1;  // alternate between 1 and 2
-	    tile_size[idim] /= 2;
-	    n_logical =  numTilesInBox(ba[gid], true, tile_size);
-	}
+    int ntry = 0;
+    while ((n_logical < nthreads) && (ntry++ < 6)) {
+        int idim = (ntry % 2) + 1;  // alternate between 1 and 2
+        tile_size[idim] /= 2;
+        n_logical =  numTilesInBox(ba[gid], true, tile_size);
+    }
 
-	if (n_logical < nthreads ) {
-	    amrex::Abort(
-		"ImpactParticleContainer::prepare() could not find good tile size for the number of OpenMP threads"
-		);
-	}
+    if (n_logical < nthreads ) {
+        amrex::Abort(
+        "ImpactParticleContainer::prepare() could not find good tile size for the number of OpenMP threads"
+        );
+    }
 
-	reserveData();
-	resizeData();
+    reserveData();
+    resizeData();
     }
 
     void
@@ -205,27 +205,27 @@ namespace impactx
 #if defined(AMREX_USE_OMP)
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-	{
+    {
             int tid = 1;
 #if defined(AMREX_USE_OMP)
-	    tid = omp_get_thread_num();
+        tid = omp_get_thread_num();
 #endif
 
             // we split up the np particles onto multiple tiles.
             // some tiles will get nr and some will get nlft.
             int nr = np / nthreads;
-	    int nlft = np - nr*nthreads;
+        int nlft = np - nr*nthreads;
 
-	    int num_to_add = 0; /* how many particles this tile will get*/
-	    int my_index = 0;
+        int num_to_add = 0; /* how many particles this tile will get*/
+        int my_index = 0;
 
-	    if (tid < nlft) { // get nr+1 items
-		my_index = tid * (nr+1);
-		num_to_add = nr+1;
-	    } else {         // get nr items
-		my_index = tid * nr + nlft;
-		num_to_add = nr;
-	    }
+        if (tid < nlft) { // get nr+1 items
+        my_index = tid * (nr+1);
+        num_to_add = nr+1;
+        } else {         // get nr items
+        my_index = tid * nr + nlft;
+        num_to_add = nr;
+        }
 
         auto& particle_tile = ParticlesAt(lid, gid, tid);
         auto old_np = particle_tile.numParticles();
