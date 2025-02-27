@@ -129,17 +129,23 @@ namespace impactx
 #if defined(AMREX_USE_OMP)
         nthreads = omp_get_max_threads();
 #endif
-    /**
-        When running without space charge and OpenMP parallelization, we need to make sure we have enough tiles on level 0, grid 0 to thread over the available tiles. We try to set the tile_size appropriately here. The tiles start as (long, 8, 8) in (x, y, z). So we try to reduce the tile size in the y and z directions alternately until there are enough tiles for the number of threads.
-    */
+
+        // When running without space charge and OpenMP parallelization,
+        // we need to make sure we have enough tiles on level 0, grid 0
+        // to thread over the available tiles. We try to set the tile_size
+        // appropriately here. The tiles start as (very large number, 8, 8)
+        // in (x, y, z). So we try to reduce the tile size in the y and z
+        // directions alternately until there are enough tiles for the number of threads.
+
         const auto& ba = ParticleBoxArray(lid);
         auto n_logical = numTilesInBox(ba[gid], true, tile_size);
 
         int ntry = 0;
-        while ((n_logical < nthreads) && (ntry++ < 6)) {
+        constexpr int max_tries;
+        while ((n_logical < nthreads) && (ntry++ < max_tries)) {
             int idim = (ntry % 2) + 1;  // alternate between 1 and 2
             tile_size[idim] /= 2;
-            AMREX_ALWAYS_ASSERT(tile_size[idim] > 0);
+            AMREX_ALWAYS_ASSERT_WITH_MESSAGE(tile_size[idim] > 0);
             n_logical = numTilesInBox(ba[gid], true, tile_size);
         }
 
@@ -217,19 +223,22 @@ namespace impactx
 #endif
 
             // we split up the np particles onto multiple tiles.
-            // some tiles will get nr and some will get nlft.
-            int nr = np / nthreads;
-            int nlft = np - nr*nthreads;
+            // if nthreads evenly divides np, each thread will
+            // get get n_regular particles. If there are some
+            // leftovers, however, the first n_leftover threads
+            // will get one extra
+            int n_regular  = np / nthreads;
+            int n_leftover = np - nr*nthreads;
 
             int num_to_add = 0; /* how many particles this tile will get*/
-            int my_index = 0;
+            int my_offset = 0; /*  offset into global arrays x, y, etc. for this thread*/
 
-            if (tid < nlft) { // get nr+1 items
-                my_index = tid * (nr + 1);
-                num_to_add = nr + 1;
-            } else {         // get nr items
-                my_index = tid * nr + nlft;
-                num_to_add = nr;
+            if (tid < n_leftover) { // get n_regular+1 items
+                my_offset = tid * (n_regular + 1);
+                num_to_add = n_regular + 1;
+            } else {         // get n_regular items
+                my_offset = tid * n_regular + n_leftover;
+                num_to_add = n_regular;
             }
 
             auto& particle_tile = ParticlesAt(lid, gid, tid);
@@ -261,15 +270,15 @@ namespace impactx
             amrex::ParallelFor(num_to_add,
                 [=] AMREX_GPU_DEVICE (int i) noexcept
             {
-                idcpu_arr[old_np+i] = amrex::SetParticleIDandCPU(pid + my_index + i, cpuid);
+                idcpu_arr[old_np+i] = amrex::SetParticleIDandCPU(pid + my_offset + i, cpuid);
 
-                x_arr[old_np+i] = x_ptr[my_index+i];
-                y_arr[old_np+i] = y_ptr[my_index+i];
-                t_arr[old_np+i] = t_ptr[my_index+i];
+                x_arr[old_np+i] = x_ptr[my_offset+i];
+                y_arr[old_np+i] = y_ptr[my_offset+i];
+                t_arr[old_np+i] = t_ptr[my_offset+i];
 
-                px_arr[old_np+i] = px_ptr[my_index+i];
-                py_arr[old_np+i] = py_ptr[my_index+i];
-                pt_arr[old_np+i] = pt_ptr[my_index+i];
+                px_arr[old_np+i] = px_ptr[my_offset+i];
+                py_arr[old_np+i] = py_ptr[my_offset+i];
+                pt_arr[old_np+i] = pt_ptr[my_offset+i];
 
                 qm_arr[old_np+i] = qm;
                 w_arr[old_np+i]  = bchchg/ablastr::constant::SI::q_e/np;
