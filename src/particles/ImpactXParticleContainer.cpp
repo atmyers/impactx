@@ -129,7 +129,9 @@ namespace impactx
 #if defined(AMREX_USE_OMP)
         nthreads = omp_get_max_threads();
 #endif
-
+    /**
+        When running without space charge and OpenMP parallelization, we need to make sure we have enough tiles on level 0, grid 0 to thread over the available tiles. We try to set the tile_size appropriately here. The tiles start as (long, 8, 8) in (x, y, z). So we try to reduce the tile size in the y and z directions alternately until there are enough tiles for the number of threads. 
+    */
         const auto& ba = ParticleBoxArray(lid);
         auto n_logical = numTilesInBox(ba[gid], true, tile_size);
 
