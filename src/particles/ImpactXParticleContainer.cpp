@@ -145,7 +145,10 @@ namespace impactx
         while ((n_logical < nthreads) && (ntry++ < max_tries)) {
             int idim = (ntry % 2) + 1;  // alternate between 1 and 2
             tile_size[idim] /= 2;
-            AMREX_ALWAYS_ASSERT_WITH_MESSAGE(tile_size[idim] > 0);
+            AMREX_ALWAYS_ASSERT_WITH_MESSAGE(tile_size[idim] > 0,
+                                             "Failed to set proper tile size for the number of OpenMP threads. "
+                                             "Consider lowering the number of OpenMP threads via the environment variable OMP_NUM_THREADS."
+                                             );
             n_logical = numTilesInBox(ba[gid], true, tile_size);
         }
 
