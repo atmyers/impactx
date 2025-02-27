@@ -195,7 +195,7 @@ namespace impactx
 #endif
 
         // split up particles over nthreads tiles
-        AMREX_ALWAYS_ASSERT(numTilesInBox(ParticleBoxArray(lid)[gid], true, tile_size) >= nthreads);
+        AMREX_ALWAYS_ASSERT_WITH_MESSAGE(numTilesInBox(ParticleBoxArray(lid)[gid], true, tile_size) >= nthreads, "Not enough tiles for the number of OpenMP threads - please try reducing particles.tile_size or increasing the number of cells in the domain.");
         for (int ithr = 0; ithr < nthreads; ++ithr) {
             DefineAndReturnParticleTile(lid, gid, ithr);
         }
