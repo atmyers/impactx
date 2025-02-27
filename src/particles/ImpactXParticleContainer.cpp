@@ -137,6 +137,7 @@ namespace impactx
         while ((n_logical < nthreads) && (ntry++ < 6)) {
             int idim = (ntry % 2) + 1;  // alternate between 1 and 2
             tile_size[idim] /= 2;
+            AMREX_ALWAYS_ASSERT(tile_size[idim] > 0);
             n_logical = numTilesInBox(ba[gid], true, tile_size);
         }
 
