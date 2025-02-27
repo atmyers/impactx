@@ -231,7 +231,7 @@ namespace impactx
             // leftovers, however, the first n_leftover threads
             // will get one extra
             int n_regular  = np / nthreads;
-            int n_leftover = np - nr*nthreads;
+            int n_leftover = np - n_regular*nthreads;
 
             int num_to_add = 0; /* how many particles this tile will get*/
             int my_offset = 0; /*  offset into global arrays x, y, etc. for this thread*/
