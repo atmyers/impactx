@@ -220,7 +220,7 @@ namespace impactx
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
         {
-            int tid = 1;
+            int tid = 0;
 #if defined(AMREX_USE_OMP)
             tid = omp_get_thread_num();
 #endif
